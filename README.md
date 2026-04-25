@@ -1,8 +1,13 @@
 # MediStore 💊
 *"Your Trusted Online Medicine Shop"*
 
-**Backend Repo:** [https://github.com/Mehedi-Hasann/MediStore-Backend](https://github.com/Mehedi-Hasann/MediStore-Backend)  
-**Live Demo:** [https://medi-store-frontend-ten.vercel.app/](https://medi-store-frontend-ten.vercel.app/)
+## 🚀 Project Links
+
+**Backend Repository:**  
+https://github.com/Mehedi-Hasann/MediStore-Backend  
+
+**Frontend Live Demo:**  
+https://medi-store-one.vercel.app/
 
 ---
 
