@@ -2,8 +2,9 @@
 
 import { cookies } from "next/headers";
 import { medicineService } from "./medicine.service";
-import { updateTag } from "next/cache";
+import { revalidateTag } from "next/cache";
 import { Address, CreateReview, Order, UpdateAddress } from "@/types/routes.type";
+
 
 const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -11,8 +12,75 @@ export interface EditInfo{
   name : string,
   email : string
 }
+export interface IRegisterUser{
+  name : string,
+  email : string,
+  password : string,
+  image : File
+}
+export interface ILoginUser{
+    email : string,
+    password : string,
+}
 
 export const customerService = {
+
+  registerUser: async function (payload: IRegisterUser) {
+  try {
+    // console.log(payload);
+
+    const formData = new FormData();
+
+    formData.append("name", payload.name);
+    formData.append("email", payload.email);
+    formData.append("password", payload.password);
+
+    if (payload.image) {
+      formData.append("file", payload.image);
+    }
+
+    const res = await fetch(`${API_URL}/auth/register`, {
+      method: "POST",
+      body: formData, // ❌ no JSON
+    });
+
+    const data = await res.json();
+    // console.log(data)
+    if(data.success==false){
+      return {data : null, error : data.message};
+    }
+
+    return { data: data, error: null };
+  } catch (error) {
+    return { data: null, error: { message: "Internal Server Error" } };
+  }
+},
+
+  loginUser : async function (payload : ILoginUser) {
+    try {
+      // console.log(payload);
+      const cookieStore = await cookies();
+      const res = await fetch(`${API_URL}/auth/login`,{
+        method : "POST",
+        headers : {
+          "Content-Type" : "application/json",
+          Cookie : cookieStore.toString()
+        },
+        body : JSON.stringify(payload),
+      })
+
+      const data = await res.json();
+      // console.log("console from loginUser => ",data);
+      if(data.success==false){
+        return {data : null, error : data.message};
+      }
+
+    return { data: data, error: null };
+    } catch (error) {
+      return {data : null, error : {message : "Internal Server Error"}}
+    }
+  },
+ 
   getMyProfile : async function () {
     try {
       const cookieStore = await cookies();
@@ -66,6 +134,7 @@ export const customerService = {
         }
       })
       const data = await res.json();
+      // console.log("data from getMyCart : ",data)
       
     
       return {data : data, error : null}
@@ -109,10 +178,6 @@ export const customerService = {
         }
       })
       const data = await res.json();
-      // console.log(data);
-      if(data){
-        updateTag("cartItems");
-      }
     
       return {data : data, error : null}
     } catch (error) {
@@ -222,7 +287,7 @@ export const customerService = {
         quantity,
         addressId
       }
-      console.log(payload);
+      // console.log("Ordering item payload ",payload);
       if(!addressId){
         return {data : null, error : {message : "Provide your Address"}}
       }
@@ -236,7 +301,7 @@ export const customerService = {
         body : JSON.stringify(payload)
       })
       const data = await res.json();
-      // console.log(data)
+      console.log("Data received after order => ",data);
       // await this.removeCartItem(cartId)
       return {data : data, error : null};
 
@@ -329,7 +394,7 @@ export const customerService = {
   updateMyAddress : async function(updatedAddressData : UpdateAddress) {
     try {
       const cookieStore = await cookies();
-      console.log('updatedAddressData => ', updatedAddressData);
+      // console.log('updatedAddressData => ', updatedAddressData);
       const res = await fetch(`${API_URL}/api/customer/update-my-address`,{
         method : "PUT",
         headers : {

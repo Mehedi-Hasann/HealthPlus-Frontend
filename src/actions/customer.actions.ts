@@ -1,8 +1,21 @@
 "use server"
 
-import { customerService, EditInfo } from "@/services/customer.service"
+import { customerService, EditInfo, ILoginUser, IRegisterUser } from "@/services/customer.service"
 import { Address, CreateReview, PaymentStatus, UpdateAddress } from "@/types/routes.type";
 import { updateTag } from "next/cache";
+
+
+
+export const registerUser = async({name,email,password,image} : IRegisterUser) => {
+  // console.log("I am from customer.action.ts");
+  const res = await customerService.registerUser({name,email,password,image});
+  return res;
+}
+
+export const loginUser = async({email,password} : ILoginUser) => {
+  const res = await customerService.loginUser({email,password});
+  return res;
+}
 
 export const getMyProfile = async() => {
   const res = await customerService.getMyProfile();

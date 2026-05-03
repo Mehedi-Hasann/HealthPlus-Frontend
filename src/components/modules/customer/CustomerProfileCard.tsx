@@ -34,6 +34,7 @@ export interface ProfileData {
 }
 
 export function CustomerProfileCard({ data }: { data: ProfileData }) {
+  console.log("Customer Profile Data : ",data)
   const { user, address } = data
 
   const [isEditingProfile, setIsEditingProfile] = useState(false)

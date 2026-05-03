@@ -38,7 +38,7 @@ export default function AdminGetAllUsers({ users }: Props) {
     const toastId = toast.loading("User Updating....")
     try {
       const status = userStatus[id];
-      console.log(status);
+   
       const res = await updateUserStatus(status , id as string);
       toast.success("User Status Update Successfully",{id : toastId})
     } catch (error) {

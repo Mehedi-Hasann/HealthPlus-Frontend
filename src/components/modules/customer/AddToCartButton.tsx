@@ -2,7 +2,6 @@
 
 import { addToCart } from "@/actions/customer.actions";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { toast } from "sonner";
 
 export default function AddToCartButton({medicineId} : {medicineId : string}) {
@@ -25,10 +24,11 @@ export default function AddToCartButton({medicineId} : {medicineId : string}) {
   };
 
   return (
-    <Link href={'/cart'} className="disabled:">
-        <Button onClick={() => handleAddToCart()}>
-      Add to Cart
-    </Button>
-    </Link>
+<Button
+  className="w-5/6 flex items-center justify-center py-5 bg-green-600 hover:bg-green-700 text-white"
+  onClick={handleAddToCart}
+>
+  Add to Cart
+</Button>
   );
 }

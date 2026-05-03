@@ -1,6 +1,13 @@
+
+import { createReview } from "@/actions/customer.actions";
+import AddReview from "@/components/modules/customer/AddReview";
 import AddToCartButton from "@/components/modules/customer/AddToCartButton";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { medicineService } from "@/services/medicine.service";
+import { CreateReview } from "@/types/routes.type";
+import Image from "next/image";
+
 
 interface Review {
   id: string;
@@ -15,7 +22,9 @@ export default async function MedicinePage({
 }) {
   const { slug } = await params;
   const { data } = await medicineService.getMedicineById(slug);
-  // console.log('exprected => ',data);
+
+
+
 
   return (
     <div className="min-h-[calc(100vh-75px)] bg-background text-foreground px-6 py-12">
@@ -30,10 +39,18 @@ export default async function MedicinePage({
           <h1 className="text-4xl font-bold tracking-tight">
             {data.data.name}
           </h1>
+        </div>
 
-          <p className="text-muted-foreground text-sm">
-            Medicine ID: {data.data.id}
-          </p>
+        {/* ✅ Image Added */}
+        <div className="w-full flex justify-center">
+          <div className="relative w-64 h-64">
+            <Image
+              src={data.data.image}
+              alt={data.data.name}
+              fill
+              className="object-contain rounded-xl border"
+            />
+          </div>
         </div>
 
         {/* Info Grid */}
@@ -65,28 +82,20 @@ export default async function MedicinePage({
 
         </div>
 
-        {/* Dates */}
-        <div className="grid md:grid-cols-2 gap-6">
-
-          <div className="bg-card text-card-foreground p-6 rounded-2xl border shadow-sm">
-            <p className="text-sm text-muted-foreground">Created At</p>
-            <p className="font-medium">
-              {new Date(data.data.createdAt).toLocaleDateString()}
-            </p>
-          </div>
-
-          <div className="bg-card text-card-foreground p-6 rounded-2xl border shadow-sm">
-            <p className="text-sm text-muted-foreground">Last Updated</p>
-            <p className="font-medium">
-              {new Date(data.data.updatedAt).toLocaleDateString()}
-            </p>
-          </div>
-
-        </div>
 
         {/* Action */}
-        <div>
+        <div className="w-5/12">
           <AddToCartButton medicineId={data.data.id} />
+        </div>
+
+        {/* Submit Review Section  */}
+        {/* REVIEW FORM */}
+        <div className="border-t pt-6">
+          <h2 className="text-2xl font-semibold mb-4">
+            Write a Review
+          </h2>
+
+          <AddReview medicineId={data.data.id} />
         </div>
 
         {/* Reviews Section */}

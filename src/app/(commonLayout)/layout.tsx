@@ -4,7 +4,7 @@ export default function CommonLayout ({children} : {children : React.ReactNode})
   
   return (
     
-    <div suppressHydrationWarning>
+    <div suppressHydrationWarning = {true}>
 
         <Navbar></Navbar>
         {children}

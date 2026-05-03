@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 export default async function OrdersPage () {
   const {data} = await getMyAllOrders();
-  // console.log(data);
+  console.log("All Order : ",data);
   
   return (
     

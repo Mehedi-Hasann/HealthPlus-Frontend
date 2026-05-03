@@ -8,13 +8,14 @@ import { toast } from "sonner";
 import { createMyOrder, decrementItem, incrementItem, removeCartItem } from "@/actions/customer.actions";
 
 export default function CustomerCartItem({ item }: { item: CartItemProps }) {
+  // console.log("Cart item => ",item)
   const totalPrice = item.quantity * (item.medicine?.data.price ?? 0);
 
   const increaseItem = async(medicineId : string) => {
     try {
       const toastId = toast.loading("Item incrementing...");
       const result =  await incrementItem(medicineId);
-      // console.log(result); // done
+      
       if(result.data.success){
         toast.success("Item Increment Successful",{id : toastId})
       }else{
@@ -29,7 +30,7 @@ export default function CustomerCartItem({ item }: { item: CartItemProps }) {
     try {
       const toastId = toast.loading("Item decrementing...");
       const res = await decrementItem(medicineId);
-      // console.log(res);
+      
       if(res.data){
         toast.success("Item Decrement Successful",{id : toastId})
       }else{
@@ -39,7 +40,7 @@ export default function CustomerCartItem({ item }: { item: CartItemProps }) {
     } catch (error: unknown) {
       const toastId = toast.loading("Item decrementing...");
       const message = error instanceof Error ? error.message : "Internal Server Error";
-      console.log(message);
+      // console.log(message);
       toast.error(message, {id : toastId});
     }
   }
@@ -47,7 +48,7 @@ export default function CustomerCartItem({ item }: { item: CartItemProps }) {
     try {
       const toastId = toast.loading("Item removing...");
       const res = await removeCartItem(id);
-      console.log(res);
+      
       if(res.data.success){
         toast.success("Item Remove Successful",{id : toastId})
       }else{
@@ -60,19 +61,20 @@ export default function CustomerCartItem({ item }: { item: CartItemProps }) {
   const orderNow = async(cartId: string) => {
     try {
       const result = await createMyOrder(cartId as string);
-      // console.log('result of PaymentUrl -> ', result.data.data.paymentUrl);
       
       if (result.data && result.data.data.paymentUrl) {
 
         toast.success("Redirecting to payment...");
+        console.log("resutl is before",result);
         window.location.href = result.data.data.paymentUrl;
+        console.log("resutl is after",result);
 
       } else {
         toast.error("Address is not Provided Or Internal Server Error");
       }
-      console.log('isPaid => ',result)
+      
     } catch (error) {
-      console.log('Error in orderNow:', error);
+      // console.log('Error in orderNow:', error);
       toast.error("Internal Server Error")
     }
   }

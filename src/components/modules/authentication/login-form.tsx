@@ -1,5 +1,6 @@
 "use client"
-
+import Cookies from "js-cookie";
+import { loginUser } from "@/actions/customer.actions"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -12,6 +13,7 @@ import {
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { authClient } from "@/lib/auth-client"
+import { ILoginUser } from "@/services/customer.service"
 import { useForm } from "@tanstack/react-form"
 import { useRouter } from "next/navigation"
 
@@ -38,11 +40,26 @@ const router = useRouter();
     onSubmit : async ({value}) => {
       const toastId = toast.loading("Logging User");
       try {
-        const {data, error} = await authClient.signIn.email(value);
-        if(error){
-          toast.error(error.message, {id : toastId});
+        const res = await loginUser({...value} as ILoginUser);
+        if(res.error){
+          toast.error(res.error, {id : toastId});
           return;
         }
+        if (res.data?.data) {
+  const { accessToken, refreshToken } = res.data.data;
+
+  Cookies.set("accessToken", accessToken, {
+    expires: 7, // 7 days
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+  });
+
+  Cookies.set("refreshToken", refreshToken, {
+    expires: 7,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+  });
+}
         router.replace("/shop");
         toast.success("Log In Successfully",{id : toastId});
       } catch (error) {

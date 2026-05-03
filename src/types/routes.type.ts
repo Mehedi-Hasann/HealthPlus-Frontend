@@ -39,10 +39,11 @@ export interface CreateReview{
 }
 
 export interface MedicinePost {
-  id : string | number,
+  id : string,
   name : string,
   price : number,
   stock : number,
+  image ?: string,
   categoryId : string,
   categoryName : string,
   createdAt : string,

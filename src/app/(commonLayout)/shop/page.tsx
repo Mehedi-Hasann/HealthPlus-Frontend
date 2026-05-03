@@ -19,6 +19,7 @@ export default async function Home({ searchParams}: {searchParams: Promise<Props
   const price = params?.price || "";
 
   const { data } = await getAllMedicine({ search, category, price });
+  // console.log(data.data.data);
   const result = await getAllCategory();
   const categoryData = result.data;
 

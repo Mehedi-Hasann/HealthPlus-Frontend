@@ -18,14 +18,15 @@ export function SellerOrderCard({ items }: { items: Order[] }) {
   console.log(items);
   const [selectedStatus, setSelectedStatus] = useState<Record<string, OrderStatus>>({})
   const [isUpdating, setIsUpdating] = useState<Record<string, boolean>>({})
+  console.log("previous status ",selectedStatus)
 
   const handleSubmit = async (id: string) => {
     const orderStatus = selectedStatus[id]
     if (!orderStatus) return
     
 
-    const toastId = toast.loading("Updating Status...")
-    setIsUpdating((prev) => ({ ...prev, [id]: true }))
+    const toastId = toast.loading("Updating Status...");
+    setIsUpdating((prev) => ({ ...prev, [id]: true }));
 
     try {
       const result = await updateOrderStatusBySeller({ id, orderStatus })
@@ -72,8 +73,8 @@ export function SellerOrderCard({ items }: { items: Order[] }) {
           </TableRow>
         )}
 
-        {items.map((item) => {
-          const currentStatus = item.status as OrderStatus
+        {items.map((item: any) => {
+          const currentStatus = item.orderStatus as OrderStatus
           const newStatus = selectedStatus[item.id] ?? currentStatus
           const isChanged = newStatus !== currentStatus
 

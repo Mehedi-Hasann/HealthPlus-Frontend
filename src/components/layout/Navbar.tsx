@@ -24,7 +24,7 @@ import {
 import { ModeToggle } from "./ModeToggle";
 import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 interface MenuItem {
   title: string;
@@ -80,9 +80,11 @@ const Navbar = ({
   className,
 }: Navbar1Props) => {
 
+    const router = useRouter();
+
     const handleSignOut = async() => {
       await authClient.signOut();
-      redirect('/login');
+      router.push('/login');
 
     }
 
@@ -132,13 +134,9 @@ const Navbar = ({
               <SheetContent className="overflow-y-auto">
             
                 <div className="flex flex-col gap-6 p-4">
-                  <Accordion
-                    type="single"
-                    collapsible
-                    className="flex w-full flex-col gap-4"
-                  >
+                  <div className="flex w-full flex-col gap-4">
                     {menu.map((item) => renderMobileMenuItem(item))}
-                  </Accordion>
+                  </div>
 
                   <div className="flex flex-col gap-3">
                     <ModeToggle />
@@ -166,11 +164,13 @@ const renderMenuItem = (item: MenuItem) => {
 
   return (
     <NavigationMenuItem key={item.title}>
-      <NavigationMenuLink
-        href={item.url}
-        className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-accent-foreground"
-      >
-        {item.title}
+      <NavigationMenuLink asChild>
+        <Link 
+          href={item.url || "#"} 
+          className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-accent-foreground"
+        >
+          {item.title}
+        </Link>
       </NavigationMenuLink>
     </NavigationMenuItem>
   );
@@ -179,9 +179,9 @@ const renderMenuItem = (item: MenuItem) => {
 const renderMobileMenuItem = (item: MenuItem) => {
 
   return (
-    <a key={item.title} href={item.url} className="text-md font-semibold">
+    <Link key={item.title} href={item.url || "#"} className="text-md font-semibold">
       {item.title}
-    </a>
+    </Link>
   );
 };
 
