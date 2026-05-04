@@ -9,11 +9,11 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "better-auth": "^1.6.9",
     "@stripe/react-stripe-js": "^6.2.0",
     "@stripe/stripe-js": "^9.2.0",
     "@t3-oss/env-nextjs": "^0.13.10",
     "@tanstack/react-form": "^1.28.3",
-    "better-auth": "^1.4.18",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "express": "^5.2.1",
@@ -29,6 +29,7 @@
     "sonner": "^2.0.7",
     "stripe": "^22.0.1",
     "tailwind-merge": "^3.4.0",
+    "vercel": "^53.1.1",
     "zod": "^4.3.6"
   },
   "devDependencies": {
