@@ -2,174 +2,188 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Trash2, Plus, Minus } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { Trash2, Plus, Minus, ShoppingBag, Package } from "lucide-react";
 import { CartItemProps } from "@/types/routes.type";
 import { toast } from "sonner";
-import { createMyOrder, decrementItem, incrementItem, removeCartItem } from "@/actions/customer.actions";
+import {
+  createMyOrder,
+  decrementItem,
+  incrementItem,
+  removeCartItem,
+} from "@/actions/customer.actions";
 
 export default function CustomerCartItem({ item }: { item: CartItemProps }) {
-  // console.log("Cart item => ",item)
   const totalPrice = item.quantity * (item.medicine?.data.price ?? 0);
+  const unitPrice = item.medicine?.data.price ?? 0;
 
-  const increaseItem = async(medicineId : string) => {
+  const increaseItem = async (medicineId: string) => {
     try {
-      const toastId = toast.loading("Item incrementing...");
-      const result =  await incrementItem(medicineId);
-      
-      if(result.data.success){
-        toast.success("Item Increment Successful",{id : toastId})
-      }else{
-        toast.error(result.error?.message || "Something Went Wrong", {id: toastId})
-      }
-      
-    } catch (error) {
-      toast.error("Internal Server Error")
-    }
-  }
-  const decreaseItem = async(medicineId : string) => {
-    try {
-      const toastId = toast.loading("Item decrementing...");
-      const res = await decrementItem(medicineId);
-      
-      if(res.data){
-        toast.success("Item Decrement Successful",{id : toastId})
-      }else{
-        toast.error(res.error?.message || "Something Went Wrong", {id: toastId})
-      }
-      
-    } catch (error: unknown) {
-      const toastId = toast.loading("Item decrementing...");
-      const message = error instanceof Error ? error.message : "Internal Server Error";
-      // console.log(message);
-      toast.error(message, {id : toastId});
-    }
-  }
-  const remoteCartItem = async(id : string) => {
-    try {
-      const toastId = toast.loading("Item removing...");
-      const res = await removeCartItem(id);
-      
-      if(res.data.success){
-        toast.success("Item Remove Successful",{id : toastId})
-      }else{
-        toast.error(res.error?.message || "Something Went Wrong", {id: toastId})
-      }
-    } catch (error) {
-      toast.error("Internal Server Error")
-    }
-  }
-  const orderNow = async(cartId: string) => {
-    try {
-      const result = await createMyOrder(cartId as string);
-      
-      if (result.data && result.data.data.paymentUrl) {
-
-        toast.success("Redirecting to payment...");
-        console.log("resutl is before",result);
-        window.location.href = result.data.data.paymentUrl;
-        console.log("resutl is after",result);
-
+      const toastId = toast.loading("Updating quantity...");
+      const result = await incrementItem(medicineId);
+      if (result.data.success) {
+        toast.success("Quantity updated", { id: toastId });
       } else {
-        toast.error("Address is not Provided Or Internal Server Error");
+        toast.error(result.error?.message || "Something went wrong", {
+          id: toastId,
+        });
       }
-      
-    } catch (error) {
-      // console.log('Error in orderNow:', error);
-      toast.error("Internal Server Error")
+    } catch {
+      toast.error("Internal Server Error");
     }
-  }
-  
+  };
+
+  const decreaseItem = async (medicineId: string) => {
+    try {
+      const toastId = toast.loading("Updating quantity...");
+      const res = await decrementItem(medicineId);
+      if (res.data) {
+        toast.success("Quantity updated", { id: toastId });
+      } else {
+        toast.error(res.error?.message || "Something went wrong", {
+          id: toastId,
+        });
+      }
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error ? error.message : "Internal Server Error";
+      toast.error(message);
+    }
+  };
+
+  const remoteCartItem = async (id: string) => {
+    try {
+      const toastId = toast.loading("Removing item...");
+      const res = await removeCartItem(id);
+      if (res.data.success) {
+        toast.success("Item removed", { id: toastId });
+      } else {
+        toast.error(res.error?.message || "Something went wrong", {
+          id: toastId,
+        });
+      }
+    } catch {
+      toast.error("Internal Server Error");
+    }
+  };
+
+  const orderNow = async (cartId: string) => {
+    try {
+      const toastId = toast.loading("Preparing your order...");
+      const result = await createMyOrder(cartId as string);
+      if (result.data && result.data.data.paymentUrl) {
+        toast.success("Redirecting to payment...", { id: toastId });
+        window.location.href = result.data.data.paymentUrl;
+      } else {
+        toast.error("Address not provided or Internal Server Error", {
+          id: toastId,
+        });
+      }
+    } catch {
+      toast.error("Internal Server Error");
+    }
+  };
 
   return (
-    <Card className="rounded-2xl border border-gray-800 bg-gray-900 text-gray-100 shadow-md hover:shadow-lg hover:border-gray-700 transition-all duration-300">
-      <CardContent className="p-6 flex items-center justify-between">
+    <Card className="group relative overflow-hidden rounded-2xl border border-border bg-card text-card-foreground shadow-sm hover:shadow-md transition-all duration-300">
+      {/* Top accent bar */}
+      <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-        {/* LEFT - Medicine Info */}
-        <div className="flex flex-col space-y-2">
-          <h2 className="text-lg font-semibold text-white">
-            {item.medicine?.data.name}
-          </h2>
+      <CardContent className="p-5">
+        {/* Header row */}
+        <div className="flex items-start justify-between gap-4 mb-4">
+          {/* Medicine icon + Info */}
+          <div className="flex items-start gap-3">
+            <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-emerald-500/10 dark:bg-emerald-400/10 flex items-center justify-center">
+              <Package className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+            </div>
+            <div>
+              <h2 className="text-base font-semibold text-foreground leading-tight">
+                {item.medicine?.data.name}
+              </h2>
+              <Badge
+                variant="secondary"
+                className="mt-1 text-xs font-normal px-2 py-0.5"
+              >
+                {item.medicine?.data.categoryName}
+              </Badge>
+              <p className="mt-1.5 text-xs text-muted-foreground">
+                Added {new Date(item.createdAt).toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                })}
+              </p>
+            </div>
+          </div>
 
-          <p className="text-sm text-gray-400">
-            Category: {item.medicine?.data.categoryName}
-          </p>
-
-          <p className="text-xs text-gray-500">
-            Added: {new Date(item.createdAt).toLocaleDateString()}
-          </p>
+          {/* Remove button */}
+          <Button
+            onClick={() => remoteCartItem(item.id)}
+            variant="ghost"
+            size="icon"
+            className="flex-shrink-0 h-8 w-8 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+            title="Remove item"
+          >
+            <Trash2 size={15} />
+          </Button>
         </div>
 
-        {/* MIDDLE - Price & Quantity Control */}
-        <div className="flex flex-col items-center space-y-4">
+        <Separator className="mb-4" />
 
+        {/* Price & Quantity row */}
+        <div className="flex items-center justify-between gap-3">
+          {/* Unit Price */}
           <div className="text-center">
-            <p className="text-xs text-gray-500">Unit Price</p>
-            <p className="font-medium text-gray-200">
-              $ {item.medicine?.data.price}
+            <p className="text-xs text-muted-foreground mb-0.5">Unit Price</p>
+            <p className="text-sm font-semibold text-foreground">
+              ${unitPrice.toFixed(2)}
             </p>
           </div>
 
           {/* Quantity Control */}
-          <div className="flex items-center border border-gray-700 rounded-lg overflow-hidden">
-
+          <div className="flex items-center gap-1 bg-muted rounded-xl p-1">
             <Button
               onClick={() => decreaseItem(item.medicineId)}
               size="icon"
               variant="ghost"
-              className="rounded-none text-gray-400 hover:bg-gray-800 hover:text-white"
+              className="h-7 w-7 rounded-lg text-muted-foreground hover:bg-background hover:text-foreground transition-colors"
             >
-              <Minus  size={16} />
+              <Minus size={13} />
             </Button>
-
-            <div className="px-4 py-1 text-white font-semibold text-lg bg-gray-800">
+            <span className="min-w-[2rem] text-center text-sm font-bold text-foreground px-1">
               {item.quantity}
-            </div>
-
+            </span>
             <Button
               onClick={() => increaseItem(item.medicineId)}
               size="icon"
               variant="ghost"
-              className="rounded-none text-gray-400 hover:bg-gray-800 hover:text-white"
+              className="h-7 w-7 rounded-lg text-muted-foreground hover:bg-background hover:text-foreground transition-colors"
             >
-              <Plus  size={16} />
+              <Plus size={13} />
             </Button>
-
           </div>
 
-        </div>
-
-        {/* RIGHT - Total & Remove */}
-        <div className="flex flex-col items-end space-y-4">
+          {/* Total Price */}
           <div className="text-right">
-            <p className="text-xs text-gray-500">Total</p>
-            <p className="text-2xl font-bold text-white">
-              $ {totalPrice}
+            <p className="text-xs text-muted-foreground mb-0.5">Total</p>
+            <p className="text-lg font-bold text-emerald-600 dark:text-emerald-400">
+              ${totalPrice.toFixed(2)}
             </p>
           </div>
-
-          <Button
-            onClick={() => remoteCartItem(item.id)}
-            variant="outline"
-            size="sm"
-            className="border-red-600 text-red-500 hover:bg-red-600 hover:text-white transition"
-          >
-            <Trash2 size={16} className="mr-2" />
-            Remove
-          </Button>
-
-
-          <Button
-            onClick={() => orderNow(item.id)}
-            variant="outline"
-            size="sm"
-            className= "border-green-500 text-green-500 hover:bg-green-600 hover:text-green-500 transition"
-            >    
-            Order Now
-          </Button>
-
-
         </div>
 
+        {/* Order Now CTA */}
+        <div className="mt-4">
+          <Button
+            onClick={() => orderNow(item.id)}
+            className="w-full h-9 rounded-xl bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white font-medium text-sm gap-2 transition-all duration-200 shadow-sm hover:shadow-emerald-500/25 hover:shadow-md"
+          >
+            <ShoppingBag size={15} />
+            Order Now
+          </Button>
+        </div>
       </CardContent>
     </Card>
   );

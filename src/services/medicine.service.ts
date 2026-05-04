@@ -6,30 +6,40 @@ import { cookies } from "next/headers";
 
 const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
+export interface ICreateMedicine{
+  name : string,
+  price : number,
+  stock : number,
+  category : string,
+  image : File
+}
 
 export const medicineService = {
-  createMedicine : async function (data : CreateNewMedicine) {
+  createMedicine : async function (data : ICreateMedicine) {
     try {
-      const cookieStore = await cookies(); 
-      const val = await this.getSingleCategory(data.category);
-      
-      const updatedData = {
-        name : data.name,
-        price : data.price,
-        stock : data.stock,
-        categoryName : data.category
+      const cookieStore = await cookies();
+
+      const formData = new FormData();
+
+      formData.append("name",data.name);
+      formData.append("price",data.price.toString());
+      formData.append("stock",data.stock.toString());
+      formData.append("categoryName",data.category);
+
+      if(data.image){
+        formData.append("file",data.image);
       }
-      
       
       const res = await fetch(`${API_URL}/api/seller/medicines`,{
         method: "POST",
+        body : formData,
         headers: {
-          "Content-Type": "application/json",
           Cookie: cookieStore.toString(),
-        },
-        body : JSON.stringify(updatedData)
+        }
       });
+
       const result = await res.json();
+      console.log("Result after create message : ",result);
       if (result.error) {
         return {
           data: null,
@@ -92,6 +102,7 @@ export const medicineService = {
   },
   getAllMedicine : async function (params ?: Props) {
     try {
+      console.log({})
 
       const url = new URL(`${API_URL}/api/medicines`);
 

@@ -1,7 +1,7 @@
 "use server";
 
 import { Props } from "@/app/(commonLayout)/shop/page";
-import {  medicineService } from "@/services/medicine.service";
+import {  ICreateMedicine, medicineService } from "@/services/medicine.service";
 import { CreateNewCategory, CreateNewMedicine, MedicineData, OrderStatus } from "@/types/routes.type";
 
 export const getSingleMedicine = async(slug : string) => {
@@ -13,12 +13,19 @@ export const getAllCategory = async () => {
   const res = await medicineService.getAllCategory();
   return res;
 }
-export const getAllMedicine = async ({search,category,price} : Props ) => {
-  const res = await medicineService.getAllMedicine({search,category,price} as {search : string, category : string, price : string});
+export const getAllMedicine = async ({search,category,price,page} : Props ) => {
+  const res = await medicineService.getAllMedicine({search,category,price,page} as {search : string, category : string, price : string,page: string});
   return res;
 }
-export const createMedicine = async(data : CreateNewMedicine) => {
-  const res = await medicineService.createMedicine(data);
+export const createMedicine = async(formData : FormData) => {
+  const payload: ICreateMedicine = {
+    name: formData.get("name") as string,
+    price: Number(formData.get("price")),
+    stock: Number(formData.get("stock")),
+    category: formData.get("categoryName") as string,
+    image: formData.get("file") as File,
+  };
+  const res = await medicineService.createMedicine(payload);
   return res;
 }
 

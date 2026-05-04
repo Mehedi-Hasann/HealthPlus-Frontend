@@ -1,21 +1,20 @@
 "use client";
 
 import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
 import { MedicinePost } from "@/types/routes.type";
 import Image from "next/image";
 import Link from "next/link";
 import AddToCartButton from "../customer/AddToCartButton";
-import { Pill } from "lucide-react";
+import { Pill, Package } from "lucide-react";
 
 type Props = {
   item: MedicinePost;
 };
 
 export default function MedicineCards({ item }: Props) {
-  const imageSrc = item.image?.trim()
-    ? item.image
-    : "/placeholder-medicine.png";
+  const hasImage = !!item.image?.trim();
 
   return (
     <motion.div
@@ -25,60 +24,94 @@ export default function MedicineCards({ item }: Props) {
       transition={{ duration: 0.3 }}
       className="h-full"
     >
-      <Card className="group h-full overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm transition-all duration-300 hover:shadow-xl dark:border-zinc-800 dark:bg-zinc-950">
+      <Card className="group h-full flex flex-col overflow-hidden rounded-2xl border border-border bg-card text-card-foreground shadow-sm transition-all duration-300 hover:shadow-lg">
 
-        {/* CLICKABLE AREA (ONLY LINK WRAPPING IMAGE + TITLE) */}
-        <Link
-          href={`/shop/${item.id}`}
-          className="block"
-        >
-          {/* IMAGE */}
-          <div className="relative p-2 pb-0">
-            <div className="absolute left-3 top-3 z-20 inline-flex items-center gap-1 rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-semibold text-sky-700 shadow dark:bg-zinc-900/95 dark:text-sky-300">
-              <Pill className="h-3 w-3" />
-              {item.categoryName}
+        {/* CLICKABLE AREA */}
+        <Link href={`/shop/${item.id}`} className="block">
+
+          {/* ── IMAGE SECTION ── */}
+          <div className="relative">
+            {/* Category badge */}
+            <div className="absolute left-3 top-3 z-10">
+              <Badge
+                variant="secondary"
+                className="rounded-full px-2.5 py-0.5 text-[11px] font-medium gap-1 bg-card/90 backdrop-blur-sm text-foreground border border-border/50 shadow-sm"
+              >
+                <Pill className="h-3 w-3" />
+                {item.categoryName}
+              </Badge>
             </div>
 
-            <div className="relative h-40 w-full overflow-hidden rounded-2xl bg-gradient-to-br from-sky-100 via-cyan-50 to-white dark:from-zinc-900 dark:via-zinc-800 dark:to-zinc-900">
-              <Image
-                src={imageSrc}
-                alt={item.name}
-                fill
-                sizes="(max-width: 768px) 100vw, 33vw"
-                priority
-                className="object-contain p-4 transition-transform duration-500 group-hover:scale-105"
-              />
+            {/* Stock indicator */}
+            <div className="absolute right-3 top-3 z-10">
+              <Badge
+                className={`rounded-full px-2 py-0.5 text-[10px] font-semibold border shadow-sm backdrop-blur-sm ${
+                  item.stock > 0
+                    ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/25"
+                    : "bg-red-500/15 text-red-700 dark:text-red-400 border-red-500/25"
+                }`}
+              >
+                {item.stock > 0 ? `${item.stock} in stock` : "Out of stock"}
+              </Badge>
+            </div>
+
+            {/* Image container */}
+            <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted/30">
+              {hasImage ? (
+                <>
+                  {/* Blurred background fill */}
+                  <Image
+                    src={item.image!}
+                    alt=""
+                    fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    className="object-cover scale-110 blur-xl opacity-40"
+                    aria-hidden="true"
+                  />
+                  {/* Crisp foreground */}
+                  <Image
+                    src={item.image!}
+                    alt={item.name}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    priority
+                    className="object-contain p-6 relative z-[1] transition-transform duration-500 group-hover:scale-105"
+                  />
+                </>
+              ) : (
+                /* Elegant placeholder */
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-gradient-to-br from-muted/50 to-muted">
+                  <div className="w-14 h-14 rounded-2xl bg-muted flex items-center justify-center">
+                    <Package className="w-7 h-7 text-muted-foreground/60" />
+                  </div>
+                  <span className="text-[11px] text-muted-foreground/50 font-medium">
+                    No image
+                  </span>
+                </div>
+              )}
             </div>
           </div>
 
-          {/* TITLE */}
-          <div className="px-4 pt-2">
-            <h2 className="line-clamp-2 min-h-[20px] text-base font-bold leading-snug text-zinc-900 transition hover:text-sky-600 dark:text-white dark:hover:text-sky-400">
+          {/* ── TITLE ── */}
+          <div className="px-4 pt-3">
+            <h2 className="line-clamp-2 min-h-[40px] text-sm font-semibold leading-snug text-foreground transition-colors group-hover:text-emerald-600 dark:group-hover:text-emerald-400">
               {item.name}
             </h2>
           </div>
         </Link>
 
-        {/* PRICE + STOCK */}
-        <div className="flex justify-between px-4">
-          <div className="flex items-end gap-2">
-            <span className="text-2xl font-extrabold text-sky-600 dark:text-sky-400">
-              $ {item.price}
+        {/* ── PRICE ── */}
+        <div className="px-4 mt-auto pt-2">
+          <div className="flex items-baseline gap-1">
+            <span className="text-xl font-bold text-emerald-600 dark:text-emerald-400">
+              ${item.price.toFixed(2)}
             </span>
-          </div>
-
-          <div className="flex gap-x-10 items-center justify-between rounded-xl bg-zinc-100 px-3 py-2 dark:bg-zinc-900">
-            <span className="text-xs text-zinc-500 dark:text-zinc-400">
-              Stock
-            </span>
-            <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">
-              {item.stock} pcs
-            </span>
+            <span className="text-xs text-muted-foreground">/unit</span>
           </div>
         </div>
 
-        {/* BUTTON (OUTSIDE LINK → FIXS HYDRATION ERROR) */}
-        <div className="px-4 pb-4 flex item-center justify-center">
+        {/* ── ADD TO CART ── */}
+        <div className="px-4 pb-4 pt-3">
           <AddToCartButton medicineId={item.id} />
         </div>
 

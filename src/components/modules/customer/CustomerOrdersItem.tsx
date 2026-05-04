@@ -3,102 +3,146 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { OrderProps, OrderStatus, PaymentStatus } from "@/types/routes.type";
+import { Separator } from "@/components/ui/separator";
+import {
+  OrderProps,
+  OrderStatus,
+  PaymentStatus,
+} from "@/types/routes.type";
 import Link from "next/link";
+import {
+  Package,
+  ChevronRight,
+  Calendar,
+  Tag,
+  Hash,
+  CreditCard,
+} from "lucide-react";
+
+/* ── status colour map ── */
+const STATUS_STYLES: Record<string, string> = {
+  [OrderStatus.CONFIRMED]:
+    "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30",
+  [OrderStatus.PENDING]:
+    "bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/30",
+  [OrderStatus.SHIPPED]:
+    "bg-blue-500/10 text-blue-700 dark:text-blue-400 border-blue-500/30",
+  [OrderStatus.DELIVERED]:
+    "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30",
+  [OrderStatus.CANCELLED]:
+    "bg-red-500/10 text-red-700 dark:text-red-400 border-red-500/30",
+};
+
+const PAYMENT_STYLES: Record<string, string> = {
+  [PaymentStatus.PAID]:
+    "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30",
+  [PaymentStatus.UNPAID]:
+    "bg-red-500/10 text-red-700 dark:text-red-400 border-red-500/30",
+  [PaymentStatus.CANCELLED]:
+    "bg-red-500/10 text-red-700 dark:text-red-400 border-red-500/30",
+};
 
 export default function CustomerOrdersItem({ order }: { order: OrderProps }) {
-
   return (
-    <Card className="bg-gray-900 border border-gray-800 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 text-gray-100">
-      <CardContent className="p-4 flex flex-col space-y-2">
+    <Card className="group relative overflow-hidden rounded-2xl border border-border bg-card text-card-foreground shadow-sm hover:shadow-md transition-all duration-300">
+      {/* Top accent */}
+      <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-        {/* Header */}
-        <div className="flex justify-between items-center">
-          <h2 className="text-lg font-semibold text-white">
-            Medicine Name : {order.medicine.name}
-          </h2>
-          
+      <CardContent className="p-5 flex flex-col gap-4">
+        {/* ── Header ── */}
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex items-start gap-3">
+            <div className="flex-shrink-0 w-9 h-9 rounded-xl bg-emerald-500/10 dark:bg-emerald-400/10 flex items-center justify-center">
+              <Package className="w-4.5 h-4.5 text-emerald-600 dark:text-emerald-400" />
+            </div>
+            <div>
+              <h2 className="text-sm font-semibold text-foreground leading-tight">
+                {order.medicine.name}
+              </h2>
+              <div className="flex items-center gap-1.5 mt-1">
+                <Tag className="w-3 h-3 text-muted-foreground" />
+                <span className="text-xs text-muted-foreground">
+                  {order.medicine?.categoryName ?? "N/A"}
+                </span>
+              </div>
+            </div>
+          </div>
 
           <Badge
-            className={`
-              px-3 py-1 text-xs font-medium
-              ${order.orderStatus === OrderStatus.CONFIRMED
-                ? "bg-green-600/20 text-green-400 border border-green-600"
-                : "bg-yellow-600/20 text-yellow-400 border border-yellow-600"
-              }
-            `}
+            variant="outline"
+            className={`text-[10px] px-2 py-0.5 rounded-full font-medium border ${
+              STATUS_STYLES[order.orderStatus] ?? STATUS_STYLES[OrderStatus.PENDING]
+            }`}
           >
             {order.orderStatus}
           </Badge>
         </div>
 
-        {/* Body */}
-        <div className="grid grid-cols-2 gap-4 text-sm">
+        <Separator />
+
+        {/* ── Info grid ── */}
+        <div className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
+          <div>
+            <p className="text-xs text-muted-foreground mb-0.5 flex items-center gap-1">
+              <Hash className="w-3 h-3" /> Qty
+            </p>
+            <p className="font-semibold text-foreground">{order.quantity}</p>
+          </div>
 
           <div>
-            <p className="text-gray-400">Quantity</p>
-            <p className="text-white font-semibold">{order.quantity}</p>
-          </div>
-          <div>
-            <p className="text-gray-400">Unit Price</p>
-            <p className="text-white font-semibold">
-              $ {order.medicine?.price ?? 0}
+            <p className="text-xs text-muted-foreground mb-0.5">Unit Price</p>
+            <p className="font-semibold text-foreground">
+              ${(order.medicine?.price ?? 0).toFixed(2)}
             </p>
           </div>
 
           <div>
-            <p className="text-gray-400">Total Amount</p>
-            <p className="text-2xl font-bold text-white">
-              $ {order.totalAmount}
+            <p className="text-xs text-muted-foreground mb-0.5">Total</p>
+            <p className="text-lg font-bold text-emerald-600 dark:text-emerald-400">
+              ${Number(order.totalAmount).toFixed(2)}
             </p>
           </div>
 
           <div>
-            <p className="text-gray-400">Created</p>
-            <p className="text-gray-300">
-              {new Date(order.createdAt).toLocaleDateString()}
+            <p className="text-xs text-muted-foreground mb-0.5 flex items-center gap-1">
+              <CreditCard className="w-3 h-3" /> Payment
             </p>
-          </div>
-
-
-          {/* ✅ NEW: Category */}
-          <div>
-            <p className="text-gray-400">Category</p>
-            <p className="text-gray-300">
-              {order.medicine?.categoryName ?? "N/A"}
-            </p>
-          </div>
-
-
-          <div>
-            <p className="text-gray-400">Payment</p>
             <Badge
-              className={`
-                px-2 py-1 text-xs
-                ${order.paymentStatus === PaymentStatus.PAID
-                  ? "bg-blue-600/20 text-blue-400 border border-blue-600"
-                  : "bg-red-600/20 text-red-400 border border-red-600"
-                }
-              `}
+              variant="outline"
+              className={`text-[10px] px-2 py-0.5 rounded-full font-medium border ${
+                PAYMENT_STYLES[order.paymentStatus] ??
+                PAYMENT_STYLES[PaymentStatus.UNPAID]
+              }`}
             >
               {order.paymentStatus}
             </Badge>
           </div>
-
         </div>
 
-        {/* Footer */}
-        <div className="flex justify-end">
+        <Separator />
+
+        {/* ── Footer ── */}
+        <div className="flex items-center justify-between">
+          <span className="text-xs text-muted-foreground flex items-center gap-1">
+            <Calendar className="w-3 h-3" />
+            {new Date(order.createdAt).toLocaleDateString("en-US", {
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+            })}
+          </span>
+
           <Link href={`/orders/${order.id}`}>
             <Button
-              variant="outline"
-              className="border-gray-700 text-gray-300 hover:bg-gray-800"
+              variant="ghost"
+              size="sm"
+              className="h-8 px-3 rounded-xl text-xs gap-1 text-muted-foreground hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
             >
               View Details
+              <ChevronRight className="w-3.5 h-3.5" />
             </Button>
           </Link>
         </div>
-
       </CardContent>
     </Card>
   );

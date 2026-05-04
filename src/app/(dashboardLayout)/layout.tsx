@@ -1,4 +1,5 @@
 import { AppSidebar } from "@/components/app-sidebar"
+import { DashboardNavbar } from "@/components/layout/DashboardNavbar"
 import {
   SidebarInset,
   SidebarProvider,
@@ -12,12 +13,8 @@ import { redirect } from "next/navigation";
 export default async function Page({admin,customer,seller}: {admin: React.ReactNode,customer: React.ReactNode,seller:React.ReactNode}) {
   
   const session = await userService.getSession();
-  // console.log('session is => ',session);
-
-  
 
   if (!session?.data?.user) {
-    // console.log("/login success");
     redirect('/login');
   }
 
@@ -25,15 +22,17 @@ export default async function Page({admin,customer,seller}: {admin: React.ReactN
   const userInfo = {
     role : data
   }
+  
   return (
     <SidebarProvider>
       <AppSidebar user={userInfo}/>
       <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+        <header className="flex h-16 shrink-0 items-center gap-2 border-b border-border bg-card/80 backdrop-blur-sm px-4 sticky top-0 z-10 shadow-sm">
           <SidebarTrigger className="-ml-1" />
-        
+          <div className="h-6 w-px bg-border mx-2" /> {/* Separator */}
+          <DashboardNavbar />
         </header>
-        <div className="flex flex-1 flex-col gap-4 p-4">
+        <div className="flex flex-1 flex-col gap-4 p-4 overflow-y-auto bg-muted/10">
           {userInfo.role===Roles.admin? admin : userInfo.role===Roles.customer? customer : seller}
         </div>
       </SidebarInset>

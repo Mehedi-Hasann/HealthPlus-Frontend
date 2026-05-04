@@ -6,31 +6,26 @@ import { motion } from "framer-motion";
 export default function ExplorePage() {
   return (
     <div
-      className="w-full flex items-center justify-center
-      min-h-[calc(100vh-75px)]
-      bg-gradient-to-br
-      from-blue-200 via-indigo-200 to-purple-200
-      dark:from-gray-950 dark:via-slate-900 dark:to-black"
+      className="w-full flex items-center justify-center min-h-[calc(100vh-75px)] bg-background"
     >
-      <div className="text-center space-y-8 px-6">
+      <div className="text-center space-y-8 px-6 max-w-2xl mx-auto">
 
-        <h1 className="text-4xl md:text-5xl font-bold text-gray-800 dark:text-white">
+        <h1 className="text-4xl md:text-6xl font-bold text-foreground">
           Welcome to MediStore
         </h1>
 
-        <p className="text-gray-600 dark:text-gray-300 text-lg">
+        <p className="text-muted-foreground text-lg md:text-xl">
           Find medicines easily and quickly
         </p>
 
         <Link href="/shop">
           <motion.button
-            whileHover={{ scale: 1.08 }}
+            whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             className="
-            px-10 py-4 text-lg font-semibold rounded-2xl shadow-lg
-            bg-blue-600 text-white
-            hover:bg-blue-700
-            dark:bg-blue-500 dark:hover:bg-blue-600
+            mt-4 px-10 py-4 text-lg font-semibold rounded-2xl shadow-lg
+            bg-primary text-primary-foreground
+            hover:opacity-90
             transition duration-300"
           >
             Explore Medicine

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { ICreateMedicine } from "@/services/medicine.service";
 import { useForm } from "@tanstack/react-form";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -14,7 +15,10 @@ const formSchema = z.object({
   name : z.string().min(1, "You must Provide Medicine Name"),
   price : z.string().min(1, "Price is required"),
   stock : z.string().min(1, "Stock can not be empty"),
-  categoryName : z.string().min(1, "Category con not be empty")
+  categoryName : z.string().min(1, "Category con not be empty"),
+  image: z.instanceof(File, {
+      message: "You have to upload your profile picture",
+  }),
 })
 
 
@@ -26,6 +30,7 @@ export function NewMedicineCard () {
       price : "",
       stock : "",
       categoryName : "",
+      image: null as File | null,
     },
     validators : {
       onSubmit : formSchema
@@ -33,14 +38,19 @@ export function NewMedicineCard () {
     ,
     onSubmit : async ({value}) => {
       const toastId = toast.loading("Adding Medicine...");
-      const medicineData = {
-        name : value.name,
-        price : Number(value.price),
-        stock : Number(value.stock),
-        category : value.categoryName
-      };
+      const formData = new FormData();
+      
+      formData.append("name", value.name);
+      formData.append("price", value.price);
+      formData.append("stock", value.stock);
+      formData.append("categoryName", value.categoryName);
+      
+      if (value.image) {
+        formData.append("file", value.image);
+      }
+
       try {
-        const result = await createMedicine(medicineData);
+        const result = await createMedicine(formData);
         if(result.data){
           toast.success("Medicine Created Successfully",{id : toastId})
           form.reset();        
@@ -143,6 +153,33 @@ export function NewMedicineCard () {
                   </Field>
                 )
               }} />
+<form.Field name="image">
+              {(field) => {
+                const isInvalid =
+                  field.state.meta.isTouched &&
+                  !field.state.meta.isValid;
+
+                return (
+                  <Field data-invalid={isInvalid}>
+                    <FieldLabel>Profile Image</FieldLabel>
+
+                    <Input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file =
+                          e.target.files?.[0] || null;
+                        field.handleChange(file);
+                      }}
+                    />
+
+                    {isInvalid && (
+                      <FieldError errors={field.state.meta.errors} />
+                    )}
+                  </Field>
+                );
+              }}
+            </form.Field>
             </FieldGroup>
 
           </form>
