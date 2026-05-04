@@ -13,13 +13,15 @@ import {
 import { Button } from "@/components/ui/button";
 import { updateUserStatus } from "@/actions/admin.actions";
 import { toast } from "sonner";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { ShieldCheck, UserX, Users, Save } from "lucide-react";
 
 type Props = {
   users: UserType[];
 };
 
 export default function AdminGetAllUsers({ users }: Props) {
-  // Local state for tracking user status
   const [userStatus, setUserStatus] = useState(
     users.reduce((acc, user) => {
       acc[user.id] = user.userStatus;
@@ -35,78 +37,136 @@ export default function AdminGetAllUsers({ users }: Props) {
   };
 
   const handleSubmit = async(id: string) => {
-    const toastId = toast.loading("User Updating....")
+    const toastId = toast.loading("Updating user status...");
     try {
       const status = userStatus[id];
-   
-      const res = await updateUserStatus(status , id as string);
-      toast.success("User Status Update Successfully",{id : toastId})
+      await updateUserStatus(status , id);
+      toast.success("User status updated successfully", { id: toastId });
     } catch (error) {
-      toast.error("User Update Failed. Internal Server Error")
+      toast.error("Failed to update user status", { id: toastId });
     }
   };
 
   return (
-    <div className="p-6">
-      <h1 className="text-3xl font-bold mb-6">All Users</h1>
-
-      <div className="overflow-x-auto">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>User ID</TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Role</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>IsVerified?</TableHead>
-              <TableHead>Action</TableHead>
-            </TableRow>
-          </TableHeader>
-
-          <TableBody>
-            {users.map((user) => (
-              <TableRow key={user.id} className="hover:bg-gray-50 dark:hover:bg-gray-800">
-                {/* User ID */}
-                <TableCell>{user.id}</TableCell>
-                <TableCell>{user.name}</TableCell>
-                <TableCell>{user.email}</TableCell>
-                <TableCell>
-                  
-                    {user.role}
-                  
-                </TableCell>
-                
-
-                {/* Status select */}
-                <TableCell>
-                  <select
-                    value={userStatus[user.id]}
-                    onChange={(e) =>
-                      handleStatusChange(
-                        user.id,
-                        e.target.value as "ACTIVE" | "DELETED" | "BLOCKED"
-                      )
-                    }
-                    className="border rounded px-2 py-1 bg-amber-800"
-                  >
-                    <option value="ACTIVE" className="text-black">ACTIVE</option>
-                    <option value="DELETED" className="text-black">DELETED</option>
-                    <option value="BLOCKED" className="text-black">BLOCKED</option>
-                  </select>
-                </TableCell>
-
-                <TableCell>{user.emailVerified ? 'Yes' : 'No'}</TableCell>
-                <TableCell>
-                  <Button onClick={() => handleSubmit(user.id)} size="sm">
-                    Submit
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-bold tracking-tight text-foreground flex items-center gap-2.5">
+          <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center">
+            <Users className="w-5 h-5 text-purple-500" />
+          </div>
+          Manage Users
+        </h1>
       </div>
+
+      <Card className="border-border/50 bg-card/40 backdrop-blur-sm shadow-sm rounded-2xl overflow-hidden">
+        <div className="h-1 bg-gradient-to-r from-purple-500 via-indigo-400 to-blue-500" />
+        <CardContent className="p-0">
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader className="bg-muted/50">
+                <TableRow className="hover:bg-transparent">
+                  <TableHead className="font-semibold text-muted-foreground py-4 px-6">User ID</TableHead>
+                  <TableHead className="font-semibold text-muted-foreground">Name & Email</TableHead>
+                  <TableHead className="font-semibold text-muted-foreground">Role</TableHead>
+                  <TableHead className="font-semibold text-muted-foreground">Verification</TableHead>
+                  <TableHead className="font-semibold text-muted-foreground">Status Control</TableHead>
+                  <TableHead className="font-semibold text-muted-foreground text-right px-6">Action</TableHead>
+                </TableRow>
+              </TableHeader>
+
+              <TableBody>
+                {users.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={6} className="text-center py-10">
+                      <div className="flex flex-col items-center justify-center text-muted-foreground gap-2">
+                        <UserX className="w-8 h-8 opacity-50" />
+                        <p>No users found in the system.</p>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  users.map((user) => (
+                    <TableRow key={user.id} className="hover:bg-muted/30 transition-colors">
+                      <TableCell className="px-6 font-mono text-xs text-muted-foreground">
+                        {user.id}
+                      </TableCell>
+                      
+                      <TableCell>
+                        <div className="flex flex-col">
+                          <span className="font-medium text-foreground">{user.name}</span>
+                          <span className="text-xs text-muted-foreground">{user.email}</span>
+                        </div>
+                      </TableCell>
+
+                      <TableCell>
+                        <Badge variant="outline" className={`bg-background shadow-sm ${user.role === 'ADMIN' ? 'border-primary text-primary' : 'border-border text-foreground'}`}>
+                          {user.role}
+                        </Badge>
+                      </TableCell>
+
+                      <TableCell>
+                        {user.emailVerified ? (
+                          <Badge variant="outline" className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20 gap-1.5 px-2.5 py-0.5">
+                            <ShieldCheck className="w-3 h-3" /> Verified
+                          </Badge>
+                        ) : (
+                          <Badge variant="outline" className="bg-amber-500/10 text-amber-600 border-amber-500/20 px-2.5 py-0.5">
+                            Pending
+                          </Badge>
+                        )}
+                      </TableCell>
+
+                      <TableCell>
+                        <div className="relative inline-flex items-center">
+                          <select
+                            value={userStatus[user.id]}
+                            onChange={(e) =>
+                              handleStatusChange(
+                                user.id,
+                                e.target.value as "ACTIVE" | "DELETED" | "BLOCKED"
+                              )
+                            }
+                            className={`appearance-none bg-background border text-sm rounded-lg px-3 py-1.5 pr-8 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium ${
+                              userStatus[user.id] === 'ACTIVE' ? 'border-emerald-500/30 text-emerald-600' :
+                              userStatus[user.id] === 'BLOCKED' ? 'border-amber-500/30 text-amber-600' :
+                              'border-red-500/30 text-red-600'
+                            }`}
+                          >
+                            <option value="ACTIVE" className="text-foreground">Active</option>
+                            <option value="BLOCKED" className="text-foreground">Blocked</option>
+                            <option value="DELETED" className="text-foreground">Deleted</option>
+                          </select>
+                          <div className="pointer-events-none absolute right-2.5 flex items-center">
+                            <svg className={`h-4 w-4 ${
+                              userStatus[user.id] === 'ACTIVE' ? 'text-emerald-500' :
+                              userStatus[user.id] === 'BLOCKED' ? 'text-amber-500' :
+                              'text-red-500'
+                            }`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                            </svg>
+                          </div>
+                        </div>
+                      </TableCell>
+
+                      <TableCell className="text-right px-6">
+                        <Button 
+                          onClick={() => handleSubmit(user.id)} 
+                          size="sm"
+                          className="rounded-lg shadow-sm gap-1.5 transition-all"
+                          disabled={userStatus[user.id] === user.userStatus}
+                        >
+                          <Save className="w-3.5 h-3.5" />
+                          Save
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

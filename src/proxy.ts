@@ -31,7 +31,7 @@ export async function proxy (request : NextRequest) {
   
 
   if(role===Roles.admin && (pathname.startsWith('/dashboard') || pathname.startsWith('/seller') || pathname.startsWith('/customer') ) ){
-    return NextResponse.redirect( new URL("/admin",request.url) );
+    return NextResponse.redirect( new URL("/admin/dashboard",request.url) );
   }
   else if(role===Roles.seller && (pathname.startsWith('/dashboard') || pathname.startsWith('/admin') || pathname.startsWith('/customer') ) ){
     return NextResponse.redirect( new URL("/seller/dashboard",request.url) );

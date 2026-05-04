@@ -69,11 +69,11 @@ export default async function Home({ searchParams}: {searchParams: Promise<Props
                 id="category"
                 name="category"
                 defaultValue={category}
-                className="w-full h-10 rounded-xl border border-border bg-muted/40 px-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500 transition-all appearance-none cursor-pointer"
+                className="w-full h-10 rounded-xl border border-border bg-muted/40 px-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500 transition-all appearance-none cursor-pointer dark:bg-slate-900"
               >
-                <option value="">All Categories</option>
+                <option value="" className="bg-background text-foreground">All Categories</option>
                 {categoryData?.data.map((cat: any) => (
-                  <option key={cat.id} value={cat.categoryName}>
+                  <option key={cat.id} value={cat.categoryName} className="bg-background text-foreground">
                     {cat.categoryName}
                   </option>
                 ))}

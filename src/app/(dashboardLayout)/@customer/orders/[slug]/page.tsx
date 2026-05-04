@@ -1,4 +1,4 @@
-import { getMySingleOrders } from "@/actions/customer.actions";
+import { getMySingleOrders, getMyAddress } from "@/actions/customer.actions";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -24,6 +24,9 @@ export default async function SingleOrder({
 
   const response = await getMySingleOrders(slug);
   const order = response?.data.data;
+
+  const addressResponse = await getMyAddress();
+  const userAddress = addressResponse?.data?.data || addressResponse?.data;
 
   if (!order) {
     return (
@@ -194,11 +197,21 @@ export default async function SingleOrder({
 
             <Separator className="mb-4" />
 
-            {order.shippingAddress ? (
+            {order.shippingAddress || userAddress ? (
               <div className="px-4 py-3 rounded-xl bg-muted/40 border border-border/50">
-                <p className="text-sm text-foreground leading-relaxed">
-                  {order.shippingAddress}
-                </p>
+                {order.shippingAddress ? (
+                  <p className="text-sm text-foreground leading-relaxed">
+                    {order.shippingAddress}
+                  </p>
+                ) : (
+                  <div className="space-y-1">
+                    <p className="text-sm font-medium text-foreground">{userAddress.fullName}</p>
+                    <p className="text-xs text-muted-foreground">{userAddress.phone}</p>
+                    <p className="text-sm text-foreground leading-relaxed">
+                      {[userAddress.houseNo, userAddress.street, userAddress.area, userAddress.city, userAddress.postalCode].filter(Boolean).join(", ")}
+                    </p>
+                  </div>
+                )}
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center py-8 gap-2">
