@@ -4,6 +4,7 @@ import { getAllMedicine } from "@/actions/medicine.actions";
 import MedicineCards from "@/components/modules/home/MedicineCard";
 import PaginationDemo from "@/components/pagination-control";
 import { MedicinePost } from "@/types/routes.type";
+import { userService } from "@/services/user.service";
 
 export interface Props {
   search?: string;
@@ -34,6 +35,9 @@ export default async function Home({ searchParams}: {searchParams: Promise<Props
     limit : 6,
     totalPages : 1
   };
+  
+  const session = await userService.getSession();
+  const role = session?.data?.user?.role || "";
   // console.log(pagination)
 
   return (
@@ -111,7 +115,7 @@ export default async function Home({ searchParams}: {searchParams: Promise<Props
       {/* ── Medicine Grid ── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 max-w-7xl mx-auto px-4 gap-6 pb-8">
         {post.map((item: MedicinePost) => (
-          <MedicineCards key={item.id} item={item} />
+          <MedicineCards key={item.id} item={item} role={role} />
         ))}
       </div>
 

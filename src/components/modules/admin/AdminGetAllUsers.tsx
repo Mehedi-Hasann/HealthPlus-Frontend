@@ -153,7 +153,6 @@ export default function AdminGetAllUsers({ users }: Props) {
                           onClick={() => handleSubmit(user.id)} 
                           size="sm"
                           className="rounded-lg shadow-sm gap-1.5 transition-all"
-                          disabled={userStatus[user.id] === user.userStatus}
                         >
                           <Save className="w-3.5 h-3.5" />
                           Save

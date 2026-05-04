@@ -7,13 +7,15 @@ import { MedicinePost } from "@/types/routes.type";
 import Image from "next/image";
 import Link from "next/link";
 import AddToCartButton from "../customer/AddToCartButton";
+import DeleteMedicineButton from "../seller/DeleteMedicineButton";
 import { Pill, Package } from "lucide-react";
 
 type Props = {
   item: MedicinePost;
+  role?: string;
 };
 
-export default function MedicineCards({ item }: Props) {
+export default function MedicineCards({ item, role }: Props) {
   const hasImage = !!item.image?.trim();
 
   return (
@@ -110,9 +112,13 @@ export default function MedicineCards({ item }: Props) {
           </div>
         </div>
 
-        {/* ── ADD TO CART ── */}
+        {/* ── ACTIONS ── */}
         <div className="px-4 pb-4 pt-3">
-          <AddToCartButton medicineId={item.id} />
+          {(role === "ADMIN" || role === "SELLER") ? (
+            <DeleteMedicineButton medicineId={item.id} />
+          ) : (
+            <AddToCartButton medicineId={item.id} />
+          )}
         </div>
 
       </Card>

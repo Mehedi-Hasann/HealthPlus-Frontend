@@ -5,6 +5,7 @@ import AddToCartButton from "@/components/modules/customer/AddToCartButton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { medicineService } from "@/services/medicine.service";
+import { userService } from "@/services/user.service";
 import { CreateReview } from "@/types/routes.type";
 import Image from "next/image";
 
@@ -23,7 +24,8 @@ export default async function MedicinePage({
   const { slug } = await params;
   const { data } = await medicineService.getMedicineById(slug);
 
-
+  const session = await userService.getSession();
+  const role = session?.data?.user?.role || "";
 
 
   return (
@@ -84,9 +86,11 @@ export default async function MedicinePage({
 
 
         {/* Action */}
-        <div className="w-5/12">
-          <AddToCartButton medicineId={data.data.id} />
-        </div>
+        {(role !== "ADMIN" && role !== "SELLER") && (
+          <div className="w-5/12">
+            <AddToCartButton medicineId={data.data.id} />
+          </div>
+        )}
 
         {/* Submit Review Section  */}
         {/* REVIEW FORM */}
