@@ -1,10 +1,10 @@
-# MediStore 💊
+# HealthPlus Pharmacy 💊
 *"Your Trusted Online Medicine Shop"*
 
 ## 🚀 Project Links
 
 **Backend Repository:**  
-https://github.com/Mehedi-Hasann/MediStore-Backend  
+https://github.com/Mehedi-Hasann/HealthPlus Pharmacy-Backend  
 
 **Frontend Live Demo:**  
 https://medi-store-one.vercel.app/
@@ -13,7 +13,7 @@ https://medi-store-one.vercel.app/
 
 ## Project Overview
 
-MediStore is a full-stack e-commerce web application for purchasing medicines. Customers can browse medicines, add to cart, and place orders. Sellers manage their medicine inventory and fulfill orders. Admins oversee the platform and manage all users and listings.
+HealthPlus Pharmacy is a full-stack e-commerce web application for purchasing medicines. Customers can browse medicines, add to cart, and place orders. Sellers manage their medicine inventory and fulfill orders. Admins oversee the platform and manage all users and listings.
 
 ---
 

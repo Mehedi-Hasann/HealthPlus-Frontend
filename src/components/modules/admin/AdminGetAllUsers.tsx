@@ -58,7 +58,7 @@ export default function AdminGetAllUsers({ users }: Props) {
         </h1>
       </div>
 
-      <Card className="border-border/50 bg-card/40 backdrop-blur-sm shadow-sm rounded-2xl overflow-hidden">
+      <Card className="p-5 border-border/50 bg-card/40 backdrop-blur-sm shadow-sm rounded-2xl overflow-hidden">
         <div className="h-1 bg-gradient-to-r from-purple-500 via-indigo-400 to-blue-500" />
         <CardContent className="p-0">
           <div className="overflow-x-auto">

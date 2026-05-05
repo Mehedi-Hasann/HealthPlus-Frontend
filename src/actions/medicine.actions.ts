@@ -13,8 +13,8 @@ export const getAllCategory = async () => {
   const res = await medicineService.getAllCategory();
   return res;
 }
-export const getAllMedicine = async ({search,category,price,page} : Props ) => {
-  const res = await medicineService.getAllMedicine({search,category,price,page} as {search : string, category : string, price : string,page: string});
+export const getAllMedicine = async ({search,category,price,page,sortBetweenPrice} : Props ) => {
+  const res = await medicineService.getAllMedicine({search,category,price,page,sortBetweenPrice} as {search : string, category : string, price : string,page: string,sortBetweenPrice : string});
   return res;
 }
 export const createMedicine = async(formData : FormData) => {

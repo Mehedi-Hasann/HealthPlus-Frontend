@@ -41,7 +41,7 @@ export default async function AdminDashboard() {
           return (
             <Card
               key={index}
-              className="rounded-2xl border border-border/50 bg-card/40 backdrop-blur-md shadow-sm hover:shadow-lg hover:border-primary/40 transition-all duration-300 overflow-hidden relative group"
+              className="p-5 rounded-2xl border border-border/50 bg-card/40 backdrop-blur-md shadow-sm hover:shadow-lg hover:border-primary/40 transition-all duration-300 overflow-hidden relative group"
             >
               <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 relative z-10">

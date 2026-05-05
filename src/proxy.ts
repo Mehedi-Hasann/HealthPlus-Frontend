@@ -36,9 +36,9 @@ export async function proxy (request : NextRequest) {
   else if(role===Roles.seller && (pathname.startsWith('/dashboard') || pathname.startsWith('/admin') || pathname.startsWith('/customer') ) ){
     return NextResponse.redirect( new URL("/seller/dashboard",request.url) );
   }
-  else if(role===Roles.customer && (pathname.startsWith('/dashboard') || pathname.startsWith('/admin') || pathname.startsWith('/seller') ) ){
+  else if(role===Roles.customer && (pathname.startsWith('/dashboard')|| pathname.startsWith('/customer/dashboard') || pathname.startsWith('/admin') || pathname.startsWith('/seller') ) ){
     console.log("Hi From customerRoutes");
-    return NextResponse.redirect( new URL("/cart", request.url) );
+    return NextResponse.redirect( new URL("/customer/cart", request.url) );
   }
   
 

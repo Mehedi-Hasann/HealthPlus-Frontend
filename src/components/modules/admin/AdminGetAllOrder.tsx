@@ -71,7 +71,7 @@ export function AdminOrderCard({ items }: { items: ApiResponse }) {
         </h1>
       </div>
 
-      <Card className="border-border/50 bg-card/40 backdrop-blur-sm shadow-sm rounded-2xl overflow-hidden">
+      <Card className="p-5 border-border/50 bg-card/40 backdrop-blur-sm shadow-sm rounded-2xl overflow-hidden">
         <div className="h-1 bg-gradient-to-r from-blue-500 via-teal-400 to-emerald-500" />
         <CardContent className="p-0">
           <div className="overflow-x-auto">

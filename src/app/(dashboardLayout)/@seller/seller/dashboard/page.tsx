@@ -66,7 +66,7 @@ export default async function AdminDashboard() {
           return (
             <Card
               key={index}
-              className="group overflow-hidden rounded-2xl border border-border bg-card shadow-sm hover:shadow-md transition-all duration-300 hover:border-emerald-500/20"
+              className="p-5 group overflow-hidden rounded-2xl border border-border bg-card shadow-sm hover:shadow-md transition-all duration-300 hover:border-emerald-500/20"
             >
               <CardHeader className="flex flex-row items-center justify-between pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground group-hover:text-foreground transition-colors">

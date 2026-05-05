@@ -64,7 +64,7 @@ export default function EditMedicinePage() {
   return (
     <div>
 
-      <Card className="min-h-1/3 max-w-xl mx-auto">
+      <Card className="p-5 min-h-1/3 max-w-xl mx-auto">
         <CardHeader>
           <CardTitle>Edit Medicine</CardTitle>
           <CardDescription>

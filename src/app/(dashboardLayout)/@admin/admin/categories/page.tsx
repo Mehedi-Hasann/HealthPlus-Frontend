@@ -19,7 +19,7 @@ export default async function CategoriesPage() {
           Manage Categories
         </h1>
         
-        <Link href={'categories/create-category'}>
+        <Link href={'categories/create-category'} className="p-5">
           <Button className="rounded-xl shadow-sm gap-2 bg-indigo-600 hover:bg-indigo-700 text-white">
             <Plus className="w-4 h-4" />
             Add Category

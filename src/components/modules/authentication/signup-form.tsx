@@ -88,7 +88,7 @@ export function SignupForm(
   };
 
   return (
-    <Card {...props}>
+    <Card {...props} className="p-5">
       <CardHeader>
         <CardTitle>Create an account</CardTitle>
         <CardDescription>

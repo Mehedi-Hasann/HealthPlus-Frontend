@@ -28,6 +28,7 @@ import { UpdateAddress } from "@/types/routes.type"
 
 export interface User {
   id: string
+  role : string
   name: string
   email: string
   image: string | null
@@ -98,7 +99,8 @@ const ADDRESS_FIELDS: {
   },
 ]
 
-export function CustomerProfileCard({ data }: { data: ProfileData }) {
+export function ProfileCard({ data }: { data: ProfileData }) {
+  console.log("data => ",data)
   const { user, address } = data
 
   const [isEditingProfile, setIsEditingProfile] = useState(false)
@@ -299,7 +301,7 @@ export function CustomerProfileCard({ data }: { data: ProfileData }) {
                   variant="secondary"
                   className="text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20"
                 >
-                  Customer
+                  {data.user?.role}
                 </Badge>
               </div>
             </div>

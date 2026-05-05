@@ -22,7 +22,7 @@ export default function AdminSingleCategoryCard({ data }: { data: Category }) {
 
 
   return (
-    <Card className="w-full max-w-2xl rounded-2xl shadow-lg mx-auto">
+    <Card className="p-5 w-full max-w-2xl rounded-2xl shadow-lg mx-auto">
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>

@@ -6,15 +6,15 @@ export const customerRoutes: Route[] = [
     items: [
       {
         title: "Profile",
-        url: "/profile",
+        url: "/customer/profile",
       },
       {
         title: "Cart",
-        url: "/cart",
+        url: "/customer/cart",
       },
       {
         title: "Orders",
-        url: "/orders",
+        url: "/customer/orders",
       }
     ],
   },

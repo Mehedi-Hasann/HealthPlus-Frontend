@@ -60,7 +60,7 @@ export function MedicinesTable({ medicines }: Props) {
         </Link>
       </div>
 
-      <Card className="overflow-hidden border-border bg-card rounded-2xl shadow-sm">
+      <Card className="p-5 overflow-hidden border-border bg-card rounded-2xl shadow-sm">
         <div className="overflow-x-auto">
           <Table>
             <TableHeader className="bg-muted/50">

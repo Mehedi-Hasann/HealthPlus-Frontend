@@ -102,7 +102,7 @@ export const medicineService = {
   },
   getAllMedicine : async function (params ?: Props) {
     try {
-      console.log({})
+      // console.log(params)
 
       const url = new URL(`${API_URL}/api/medicines`);
 

@@ -51,7 +51,7 @@ export function NewCategoryCard () {
   return (
     
     <div className="max-w-2/3 mx-auto">
-      <Card>
+      <Card className="p-5">
         <CardHeader>
           <CardTitle>Create New Category</CardTitle>
           <CardDescription>Provide Information to Create a new Category</CardDescription>

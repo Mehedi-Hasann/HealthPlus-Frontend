@@ -11,6 +11,11 @@ import {
   UserPlus,
   LogOut,
   Cross,
+  User,
+  Package,
+  Info,
+  Mail,
+  LifeBuoy,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -33,6 +38,15 @@ import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
 import { useRouter, usePathname } from "next/navigation";
 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
 interface MenuItem {
   title: string;
   url?: string;
@@ -50,30 +64,40 @@ interface Navbar1Props {
     title: string;
     className?: string;
   };
-  menu?: MenuItem[];
+  loggedOutMenu?: MenuItem[];
   auth?: {
     login: { title: string; url: string };
     signup: { title: string; url: string };
     signout: { title: string; url: string };
   };
+  userRole?: string;
+  userName?: string;
+  userEmail?: string;
+  userAvatar?: string;
 }
 
 const NAV_ICONS: Record<string, React.ReactNode> = {
   Home: <Home className="w-4 h-4" />,
   Shop: <Store className="w-4 h-4" />,
   Dashboard: <LayoutDashboard className="w-4 h-4" />,
+  About: <Info className="w-4 h-4" />,
+  Contact: <Mail className="w-4 h-4" />,
+  Orders: <Package className="w-4 h-4" />,
+  Profile: <User className="w-4 h-4" />,
+  Support: <LifeBuoy className="w-4 h-4" />,
 };
 
 const Navbar = ({
   logo = {
     url: "/",
     alt: "logo",
-    title: "MediStore",
+    title: "HealthPlus Pharmacy",
   },
-  menu = [
+  loggedOutMenu = [
     { title: "Home", url: "/" },
     { title: "Shop", url: "/shop" },
-    { title: "Dashboard", url: "/dashboard" },
+    { title: "About", url: "/about" },
+    { title: "Contact", url: "/contact" },
   ],
   auth = {
     login: { title: "Login", url: "/login" },
@@ -81,6 +105,10 @@ const Navbar = ({
     signout: { title: "Sign Out", url: "/sign-out" },
   },
   className,
+  userRole,
+  userName,
+  userEmail,
+  userAvatar,
 }: Navbar1Props) => {
   const router = useRouter();
   const pathname = usePathname();
@@ -88,7 +116,6 @@ const Navbar = ({
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    // Re-check accessToken cookie on every route change
     const hasToken = document.cookie.split(";").some((c) => c.trim().startsWith("accessToken="));
     setIsLoggedIn(hasToken);
   }, [pathname]);
@@ -100,12 +127,25 @@ const Navbar = ({
   }, []);
 
   const handleSignOut = async () => {
-    // Clear the accessToken cookie
     document.cookie = "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
     await authClient.signOut();
     setIsLoggedIn(false);
     router.push("/login");
   };
+
+  const roleBase = userRole?.toLowerCase() || "customer";
+
+  const loggedInMenu = [
+    { title: "Home", url: "/" },
+    { title: "Shop", url: "/shop" },
+    { title: "Dashboard", url: `/${roleBase}/dashboard` },
+    ...(userRole === "CUSTOMER" || !userRole 
+      ? [{ title: "Orders", url: "/customer/orders" }] 
+      : []),
+    // { title: "Support", url: "/support" },
+  ];
+
+  const currentMenu = isLoggedIn ? loggedInMenu : loggedOutMenu;
 
   return (
     <header
@@ -132,13 +172,13 @@ const Navbar = ({
           {/* ── Desktop Navigation ── */}
           <nav className="hidden lg:flex items-center gap-1">
             <NavigationMenu>
-              <NavigationMenuList className="gap-20">
-                {menu.map((item) => (
+              <NavigationMenuList className="gap-8">
+                {currentMenu.map((item) => (
                   <NavigationMenuItem key={item.title}>
                     <NavigationMenuLink asChild>
                       <Link
                         href={item.url || "#"}
-                        className="group h-9 items-center justify-center gap-2 rounded-xl px-4 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground data-[active=true]:bg-transparent data-[active=true]:text-foreground data-[active=true]:hover:bg-transparent data-[active=true]:focus:bg-transparent"
+                        className="group h-9 flex items-center justify-center gap-2 rounded-xl px-4 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground data-[active=true]:bg-transparent data-[active=true]:text-foreground data-[active=true]:hover:bg-transparent data-[active=true]:focus:bg-transparent"
                       >
                         {NAV_ICONS[item.title] && (
                           <span className="text-muted-foreground group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
@@ -159,15 +199,46 @@ const Navbar = ({
             <ModeToggle />
 
             {isLoggedIn ? (
-              <Button
-                variant="ghost"
-                size="sm"
-                className="rounded-xl h-9 px-4 text-sm text-muted-foreground hover:text-red-600 dark:hover:text-red-400"
-                onClick={handleSignOut}
-              >
-                <LogOut className="w-4 h-4 mr-1.5" />
-                {auth.signout.title}
-              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="relative h-9 w-9 rounded-full">
+                    <Avatar className="h-9 w-9">
+                      <AvatarImage src={userAvatar} alt="@user" />
+                      <AvatarFallback>{roleBase.charAt(0).toUpperCase()}</AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56 rounded-xl" align="end" forceMount>
+                  <div className="flex flex-col space-y-1 p-2">
+                    <p className="text-sm font-medium leading-none capitalize">{userName}</p>
+                    <p className="text-xs leading-none text-muted-foreground">{userEmail}</p>
+                  </div>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild className="rounded-lg cursor-pointer">
+                    <Link href={`/${roleBase}/profile`} className="flex items-center">
+                      <User className="mr-2 h-4 w-4" />
+                      <span>Profile</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild className="rounded-lg cursor-pointer">
+                    <Link href={`/${roleBase}/orders`} className="flex items-center">
+                      <Package className="mr-2 h-4 w-4" />
+                      <span>{userRole === "CUSTOMER" ? "My Orders" : "Manage Orders"}</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild className="rounded-lg cursor-pointer">
+                    <Link href={`/${roleBase}/dashboard`} className="flex items-center">
+                      <LayoutDashboard className="mr-2 h-4 w-4" />
+                      <span>Dashboard</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleSignOut} className="rounded-lg cursor-pointer text-red-600 focus:text-red-600">
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>{auth.signout.title}</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             ) : (
               <>
                 <Button
@@ -230,7 +301,7 @@ const Navbar = ({
 
                 {/* Mobile nav links */}
                 <div className="flex flex-col gap-1">
-                  {menu.map((item) => (
+                  {currentMenu.map((item) => (
                     <Link
                       key={item.title}
                       href={item.url || "#"}
@@ -244,6 +315,15 @@ const Navbar = ({
                       {item.title}
                     </Link>
                   ))}
+                  {isLoggedIn && (
+                     <Link
+                      href="/profile"
+                      className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+                     >
+                       <span className="text-muted-foreground"><User className="w-4 h-4" /></span>
+                       Profile
+                     </Link>
+                  )}
                 </div>
 
                 <Separator className="my-4" />

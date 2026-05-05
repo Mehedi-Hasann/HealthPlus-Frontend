@@ -62,7 +62,7 @@ export function AppSidebar({user, ...props }: {user : {role: string} & React.Com
               <Cross className="w-4 h-4 text-white rotate-45" />
             </div>
             <span className="text-lg font-bold text-foreground tracking-tight">
-              MediStore
+              HealthPlus Pharmacy
             </span>
           </Link>
       </SidebarHeader>

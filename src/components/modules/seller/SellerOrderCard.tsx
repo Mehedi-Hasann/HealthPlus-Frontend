@@ -54,7 +54,7 @@ export function SellerOrderCard({ items }: { items: Order[] }) {
         <p className="text-muted-foreground">View and update the status of customer orders.</p>
       </div>
 
-      <Card className="overflow-hidden border-border bg-card rounded-2xl shadow-sm">
+      <Card className="p-5 overflow-hidden border-border bg-card rounded-2xl shadow-sm">
         <div className="overflow-x-auto">
           <Table>
             <TableHeader className="bg-muted/50">

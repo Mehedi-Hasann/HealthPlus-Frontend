@@ -34,7 +34,7 @@ export default function MedicineCards({ item, role }: Props) {
           {/* ── IMAGE SECTION ── */}
           <div className="relative">
             {/* Category badge */}
-            <div className="absolute left-3 top-3 z-10">
+            <div className="absolute left-3  z-10">
               <Badge
                 variant="secondary"
                 className="rounded-full px-2.5 py-0.5 text-[11px] font-medium gap-1 bg-card/90 backdrop-blur-sm text-foreground border border-border/50 shadow-sm"
@@ -45,12 +45,12 @@ export default function MedicineCards({ item, role }: Props) {
             </div>
 
             {/* Stock indicator */}
-            <div className="absolute right-3 top-3 z-10">
+            <div className="absolute right-3 z-10">
               <Badge
                 className={`rounded-full px-2 py-0.5 text-[10px] font-semibold border shadow-sm backdrop-blur-sm ${
                   item.stock > 0
-                    ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/25"
-                    : "bg-red-500/15 text-red-700 dark:text-red-400 border-red-500/25"
+                    ? "bg-primary/15 text-primary border-primary/25 hover:bg-primary/20 hover:text-primary"
+                    : "bg-destructive/15 text-destructive border-destructive/25 hover:bg-destructive/20 hover:text-destructive"
                 }`}
               >
                 {item.stock > 0 ? `${item.stock} in stock` : "Out of stock"}
@@ -96,24 +96,24 @@ export default function MedicineCards({ item, role }: Props) {
 
           {/* ── TITLE ── */}
           <div className="px-4 pt-3">
-            <h2 className="line-clamp-2 min-h-[40px] text-sm font-semibold leading-snug text-foreground transition-colors group-hover:text-emerald-600 dark:group-hover:text-emerald-400">
+            <h2 className="line-clamp-2 min-h-[20px] text-sm font-semibold leading-snug text-foreground transition-colors group-hover:text-primary">
               {item.name}
             </h2>
           </div>
         </Link>
 
         {/* ── PRICE ── */}
-        <div className="px-4 mt-auto pt-2">
+        <div className="px-4 mt-auto">
           <div className="flex items-baseline gap-1">
-            <span className="text-xl font-bold text-emerald-600 dark:text-emerald-400">
+            <span className="text-xl font-bold text-primary">
               ${item.price.toFixed(2)}
             </span>
-            <span className="text-xs text-muted-foreground">/unit</span>
+            <span className="text-xs text-muted-foreground">/stripe</span>
           </div>
         </div>
 
         {/* ── ACTIONS ── */}
-        <div className="px-4 pb-4 pt-3">
+        <div className="px-4 pb-4">
           {(role === "ADMIN" || role === "SELLER") ? (
             <DeleteMedicineButton medicineId={item.id} />
           ) : (

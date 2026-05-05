@@ -30,7 +30,7 @@ export default function AdminGetAllCategoryCard({ data }: Props) {
       {data.map((category) => (
         <Card 
           key={category.id} 
-          className="group relative overflow-hidden rounded-2xl border-border/50 bg-card/40 backdrop-blur-sm shadow-sm hover:shadow-xl hover:border-indigo-500/30 transition-all duration-300 flex flex-col"
+          className="p-3 group relative overflow-hidden rounded-2xl border-border/50 bg-card/40 backdrop-blur-sm shadow-sm hover:shadow-xl hover:border-indigo-500/30 transition-all duration-300 flex flex-col"
         >
           <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           
