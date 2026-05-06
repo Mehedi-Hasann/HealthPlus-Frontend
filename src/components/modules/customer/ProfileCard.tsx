@@ -65,7 +65,7 @@ const ADDRESS_FIELDS: {
     key: "phone",
     label: "Phone",
     icon: <Phone className="w-3.5 h-3.5" />,
-    placeholder: "+1 234 567 8900",
+    placeholder: "+8801XXX-XXXXXX",
   },
   {
     key: "city",
@@ -100,7 +100,7 @@ const ADDRESS_FIELDS: {
 ]
 
 export function ProfileCard({ data }: { data: ProfileData }) {
-  console.log("data => ",data)
+  // console.log("data => ",data)
   const { user, address } = data
 
   const [isEditingProfile, setIsEditingProfile] = useState(false)
@@ -134,7 +134,7 @@ export function ProfileCard({ data }: { data: ProfileData }) {
       const result = await editMyInfo({
         name: formData.name,
         email: formData.email,
-      })
+      });
       if (result.data) {
         toast.success("Profile updated!", { id: toastId })
       } else {
@@ -157,14 +157,20 @@ export function ProfileCard({ data }: { data: ProfileData }) {
     try {
       const toastId = toast.loading("Saving address...")
       const result = await updateMyAddress(formData.address as UpdateAddress)
-      if (result.data) {
+      console.log(result.data);
+      if(!result.data.success){
+        setIsEditingAddress(true);
+        toast.error("You must Provide Full Name, Phone Number and City",{id : toastId});
+      }
+      else if (result.data) {
+        setIsEditingAddress(false);
         toast.success("Address updated!", { id: toastId })
-      } else {
+      }
+       else {
         toast.error(result.error?.message || "Something went wrong", {
           id: toastId,
         })
       }
-      setIsEditingAddress(false)
     } catch {
       toast.error("Failed to update address")
     }
@@ -320,11 +326,8 @@ export function ProfileCard({ data }: { data: ProfileData }) {
               </div>
               <div>
                 <h3 className="text-sm font-semibold text-foreground">
-                  Delivery Address
+                  My Address
                 </h3>
-                <p className="text-xs text-muted-foreground">
-                  Used for order shipping
-                </p>
               </div>
             </div>
 

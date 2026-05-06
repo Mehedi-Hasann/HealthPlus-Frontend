@@ -9,6 +9,7 @@ export default async function OrdersPage() {
   const { data } = await getMyAllOrders();
   const orders: OrderProps[] = data?.data ?? [];
   const isEmpty = orders.length === 0;
+  // console.log("orders is => ",orders)
 
   return (
     <div className="min-h-[60vh]">

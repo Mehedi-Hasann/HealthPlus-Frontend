@@ -6,7 +6,7 @@ const categories = [
   { name: "Vitamins", icon: <Activity className="w-8 h-8" />, color: "bg-orange-500/10 text-orange-600", link: "/shop?category=Vitamin" },
   { name: "Heart Care", icon: <HeartPulse className="w-8 h-8" />, color: "bg-red-500/10 text-red-600", link: "/shop?category=Cardiovascular Agents" },
   { name: "Diabetes", icon: <Droplets className="w-8 h-8" />, color: "bg-teal-500/10 text-teal-600", link: "/shop?category=Diabetes" },
-  { name: "Baby Care", icon: <Baby className="w-8 h-8" />, color: "bg-pink-500/10 text-pink-600", link: "/shop?category=baby" },
+  { name: "Baby Care", icon: <Baby className="w-8 h-8" />, color: "bg-pink-500/10 text-pink-600", link: "/shop?category=Baby Care" },
   { name: "Eye Care", icon: <Eye className="w-8 h-8" />, color: "bg-indigo-500/10 text-indigo-600", link: "/shop?category=Analgesics" },
   { name: "Fever & Pain", icon: <Thermometer className="w-8 h-8" />, color: "bg-rose-500/10 text-rose-600", link: "/shop?category=fever" },
   { name: "First Aid", icon: <Stethoscope className="w-8 h-8" />, color: "bg-emerald-500/10 text-emerald-600", link: "/shop?category=firstaid" },

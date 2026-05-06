@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Trash2, Plus, Minus, ShoppingBag, Package } from "lucide-react";
+import Image from "next/image";
 import { CartItemProps } from "@/types/routes.type";
 import { toast } from "sonner";
 import {
@@ -13,6 +14,7 @@ import {
   incrementItem,
   removeCartItem,
 } from "@/actions/customer.actions";
+import Link from "next/link";
 
 export default function CustomerCartItem({ item }: { item: CartItemProps }) {
   const totalPrice = item.quantity * (item.medicine?.data.price ?? 0);
@@ -93,10 +95,21 @@ export default function CustomerCartItem({ item }: { item: CartItemProps }) {
       <CardContent className="p-5">
         {/* Header row */}
         <div className="flex items-start justify-between gap-4 mb-4">
-          {/* Medicine icon + Info */}
+          {/* Medicine image / icon + Info */}
+          <Link href={`/shop/${item.medicineId}`} className="hover:opacity-50">
           <div className="flex items-start gap-3">
-            <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-emerald-500/10 dark:bg-emerald-400/10 flex items-center justify-center">
-              <Package className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+            <div className="flex-shrink-0 w-14 h-14 rounded-xl overflow-hidden border border-border bg-muted flex items-center justify-center">
+              {item.medicine?.data.image ? (
+                <Image
+                  src={item.medicine.data.image}
+                  alt={item.medicine.data.name}
+                  width={56}
+                  height={56}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <Package className="w-6 h-6 text-muted-foreground" />
+              )}
             </div>
             <div>
               <h2 className="text-base font-semibold text-foreground leading-tight">
@@ -105,7 +118,7 @@ export default function CustomerCartItem({ item }: { item: CartItemProps }) {
               <Badge
                 variant="secondary"
                 className="mt-1 text-xs font-normal px-2 py-0.5"
-              >
+                >
                 {item.medicine?.data.categoryName}
               </Badge>
               <p className="mt-1.5 text-xs text-muted-foreground">
@@ -117,6 +130,7 @@ export default function CustomerCartItem({ item }: { item: CartItemProps }) {
               </p>
             </div>
           </div>
+                </Link>
 
           {/* Remove button */}
           <Button
@@ -136,7 +150,7 @@ export default function CustomerCartItem({ item }: { item: CartItemProps }) {
         <div className="flex items-center justify-between gap-3">
           {/* Unit Price */}
           <div className="text-center">
-            <p className="text-xs text-muted-foreground mb-0.5">Unit Price</p>
+            <p className="text-xs text-muted-foreground mb-0.5">Stripe Price</p>
             <p className="text-sm font-semibold text-foreground">
               ${unitPrice.toFixed(2)}
             </p>

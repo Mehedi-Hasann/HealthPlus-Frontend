@@ -142,7 +142,8 @@ const Navbar = ({
     ...(userRole === "CUSTOMER" || !userRole 
       ? [{ title: "Orders", url: "/customer/orders" }] 
       : []),
-    // { title: "Support", url: "/support" },
+    ...(userRole === "CUSTOMER" || !userRole ? [{ title: "About", url: "/about" }] : []),
+    ...(userRole === "CUSTOMER" || !userRole ? [{ title: "Contact", url: "/contact" }] : []),
   ];
 
   const currentMenu = isLoggedIn ? loggedInMenu : loggedOutMenu;

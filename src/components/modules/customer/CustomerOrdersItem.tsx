@@ -18,6 +18,7 @@ import {
   Hash,
   CreditCard,
 } from "lucide-react";
+import Image from "next/image";
 
 /* ── status colour map ── */
 const STATUS_STYLES: Record<string, string> = {
@@ -43,6 +44,7 @@ const PAYMENT_STYLES: Record<string, string> = {
 };
 
 export default function CustomerOrdersItem({ order }: { order: OrderProps }) {
+  console.log(order.medicine.image)
   return (
     <Card className="group relative overflow-hidden rounded-2xl border border-border bg-card text-card-foreground shadow-sm hover:shadow-md transition-all duration-300">
       {/* Top accent */}
@@ -51,6 +53,7 @@ export default function CustomerOrdersItem({ order }: { order: OrderProps }) {
       <CardContent className="p-5 flex flex-col gap-4">
         {/* ── Header ── */}
         <div className="flex items-start justify-between gap-3">
+            <Link href={`/shop/${order.medicineId}`} className="hover:opacity-60">
           <div className="flex items-start gap-3">
             <div className="flex-shrink-0 w-9 h-9 rounded-xl bg-emerald-500/10 dark:bg-emerald-400/10 flex items-center justify-center">
               <Package className="w-4.5 h-4.5 text-emerald-600 dark:text-emerald-400" />
@@ -67,6 +70,7 @@ export default function CustomerOrdersItem({ order }: { order: OrderProps }) {
               </div>
             </div>
           </div>
+            </Link>
 
           <Badge
             variant="outline"
@@ -81,7 +85,7 @@ export default function CustomerOrdersItem({ order }: { order: OrderProps }) {
         <Separator />
 
         {/* ── Info grid ── */}
-        <div className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
+        <div className="grid grid-cols-3 gap-x-4 gap-y-3 text-sm">
           <div>
             <p className="text-xs text-muted-foreground mb-0.5 flex items-center gap-1">
               <Hash className="w-3 h-3" /> Qty
@@ -90,16 +94,32 @@ export default function CustomerOrdersItem({ order }: { order: OrderProps }) {
           </div>
 
           <div>
-            <p className="text-xs text-muted-foreground mb-0.5">Unit Price</p>
-            <p className="font-semibold text-foreground">
-              ${(order.medicine?.price ?? 0).toFixed(2)}
-            </p>
-          </div>
-
-          <div>
             <p className="text-xs text-muted-foreground mb-0.5">Total</p>
             <p className="text-lg font-bold text-emerald-600 dark:text-emerald-400">
               ${Number(order.totalAmount).toFixed(2)}
+            </p>
+          </div>
+
+          <div className="flex-shrink-0 w-14 h-14 rounded-xl overflow-hidden border border-border bg-muted">
+            <p>
+              {order.medicine.image ? (
+                <Image
+                  src={order.medicine.image}
+                  alt={order.medicine.name}
+                  width={56}
+                  height={56}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <Package className="w-6 h-6 text-muted-foreground" />
+              )}
+              </p>
+          </div>
+
+          <div>
+            <p className="text-xs text-muted-foreground mb-0.5">Stripe Price</p>
+            <p className="font-semibold text-foreground">
+              ${(order.medicine?.price ?? 0).toFixed(2)}
             </p>
           </div>
 
@@ -117,6 +137,7 @@ export default function CustomerOrdersItem({ order }: { order: OrderProps }) {
               {order.paymentStatus}
             </Badge>
           </div>
+
         </div>
 
         <Separator />

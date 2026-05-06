@@ -115,6 +115,7 @@ export interface Medicine {
       price: number;
       categoryName : string;
       description?: string;
+      image?: string;
   }
 }
 
@@ -141,6 +142,7 @@ export interface OrderProps {
     name : string;
     price : number;
     categoryName : string;
+    image : string;
   }
 }
 
