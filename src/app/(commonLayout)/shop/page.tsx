@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { getAllCategory } from "@/actions/admin.actions";
 import { getAllMedicine } from "@/actions/medicine.actions";
 import MedicineCards from "@/components/modules/home/MedicineCard";
 import PaginationDemo from "@/components/pagination-control";
-import { MedicinePost } from "@/types/routes.type";
+import { CategoryType, MedicinePost } from "@/types/routes.type";
 import { userService } from "@/services/user.service";
 
 export interface Props {
@@ -24,14 +23,14 @@ export default async function Home({ searchParams}: {searchParams: Promise<Props
   const page = params?.page || "1";
   const sortBetweenPrice = params?.sortBetweenPrice || "asc";
 
-  const response= await getAllMedicine({ search, category, price, page, sortBetweenPrice });
-  const post = response.data.data.data || [];
+  const response = await getAllMedicine({ search, category, price, page, sortBetweenPrice });
+  const post = response?.data?.data?.data || [];
 
   const result = await getAllCategory();
-  const categoryData = result.data;
+  const categoryData = result?.data;
 
 
-  const pagination = response.data?.data?.pagination || {
+  const pagination = response?.data?.data?.pagination || {
     total : 0,
     page : 1,
     limit : 6,
@@ -87,7 +86,7 @@ export default async function Home({ searchParams}: {searchParams: Promise<Props
                 className="w-full h-12 rounded-xl border border-border bg-background px-4 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all appearance-none cursor-pointer shadow-sm"
               >
                 <option value="">All Categories</option>
-                {categoryData?.data.map((cat: any) => (
+                {categoryData?.data?.map((cat: CategoryType) => (
                   <option key={cat.id} value={cat.categoryName}>
                     {cat.categoryName}
                   </option>

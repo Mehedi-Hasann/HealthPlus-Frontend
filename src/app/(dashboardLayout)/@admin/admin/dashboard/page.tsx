@@ -29,7 +29,7 @@ export default async function AdminDashboard() {
             Admin Dashboard
           </h1>
           <p className="text-sm text-muted-foreground">
-            Overview of your store's performance and activity.
+            Overview of your stores performance and activity.
           </p>
         </div>
       </div>

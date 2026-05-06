@@ -7,13 +7,15 @@ export default async function ProfilePage () {
 
   const data = await getMyProfile();
   
+  const profileData = data?.data?.data;
+  
   return (
-    
-    <div className="">
-
-      <ProfileCard data={data.data.data} />
-
+    <div>
+      {profileData ? (
+        <ProfileCard data={profileData} />
+      ) : (
+        <p className="text-muted-foreground">Profile data not available.</p>
+      )}
     </div>
-    
   );
 }

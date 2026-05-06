@@ -7,13 +7,11 @@ export default async function AllUsersPage () {
   const {data} = await getAllUsers();
   
   
+  const users = data?.data || [];
+  
   return (
-    
     <div>
-
-      <AdminGetAllUsers users = {data.data} />
-
+      <AdminGetAllUsers users={users} />
     </div>
-    
   );
 }

@@ -9,11 +9,12 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "better-auth": "^1.6.9",
     "@stripe/react-stripe-js": "^6.2.0",
     "@stripe/stripe-js": "^9.2.0",
+    "@swc/helpers": "^0.5.21",
     "@t3-oss/env-nextjs": "^0.13.10",
     "@tanstack/react-form": "^1.28.3",
+    "better-auth": "^1.6.9",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "express": "^5.2.1",

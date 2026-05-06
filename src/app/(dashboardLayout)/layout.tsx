@@ -18,9 +18,9 @@ export default async function Page({admin,customer,seller}: {admin: React.ReactN
     redirect('/login');
   }
 
-  const data = session.data.user.role;
+  const role = session?.data?.user?.role;
   const userInfo = {
-    role : data
+    role : role
   }
   
   return (

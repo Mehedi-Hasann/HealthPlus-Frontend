@@ -11,7 +11,7 @@ export default function AboutPage() {
             Dedicated to Your Health & Well-being
           </h1>
           <p className="text-lg text-muted-foreground leading-relaxed">
-            HealthPlus Pharmacy was founded with a simple mission: to make high-quality healthcare accessible, affordable, and convenient for everyone. We believe that getting your essential medicines shouldn't be a hassle.
+            HealthPlus Pharmacy was founded with a simple mission: to make high-quality healthcare accessible, affordable, and convenient for everyone. We believe that getting your essential medicines should not be a hassle.
           </p>
         </div>
       </section>

@@ -12,13 +12,20 @@ export default async function CommonLayout({
   const role = session?.data?.user?.role || "";
   // console.log(session.data?.user.userId);
 
-  const {data} = await getMyProfile();
-  console.log(data.data?.user);
+  const profileResponse = await getMyProfile();
+  const profileData = profileResponse?.data?.data;
+  
+  // console.log(profileData?.user);
 
 
   return (
     <div suppressHydrationWarning={true} className="flex flex-col min-h-screen">
-      <Navbar userEmail={data.data?.user.email} userName={data.data?.user.name} userAvatar={data?.data?.user?.image} userRole={role} />
+      <Navbar 
+        userEmail={profileData?.user?.email} 
+        userName={profileData?.user?.name} 
+        userAvatar={profileData?.user?.image} 
+        userRole={role} 
+      />
         <main className="flex-grow">{children}</main>
       <Footer />
     </div>

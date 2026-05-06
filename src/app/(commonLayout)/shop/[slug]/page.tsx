@@ -1,12 +1,8 @@
-
-import { createReview } from "@/actions/customer.actions";
 import AddReview from "@/components/modules/customer/AddReview";
 import AddToCartButton from "@/components/modules/customer/AddToCartButton";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { medicineService } from "@/services/medicine.service";
 import { userService } from "@/services/user.service";
-import { CreateReview } from "@/types/routes.type";
 import Image from "next/image";
 
 
@@ -22,10 +18,19 @@ export default async function MedicinePage({
   params: { slug: string };
 }) {
   const { slug } = await params;
-  const { data } = await medicineService.getMedicineById(slug);
+  const response = await medicineService.getMedicineById(slug);
+  const medicine = response?.data?.data;
 
   const session = await userService.getSession();
   const role = session?.data?.user?.role || "";
+
+  if (!medicine) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-xl text-muted-foreground">Medicine not found.</p>
+      </div>
+    );
+  }
 
 
   return (
@@ -35,11 +40,11 @@ export default async function MedicinePage({
         {/* Header */}
         <div className="space-y-3">
           <Badge variant="secondary" className="px-4 py-1 rounded-full">
-            {data.data.categoryName}
+            {medicine.categoryName}
           </Badge>
 
           <h1 className="text-4xl font-bold tracking-tight">
-            {data.data.name}
+            {medicine.name}
           </h1>
         </div>
 
@@ -47,8 +52,8 @@ export default async function MedicinePage({
         <div className="w-full flex justify-center">
           <div className="relative w-64 h-64">
             <Image
-              src={data.data.image}
-              alt={data.data.name}
+              src={medicine.image}
+              alt={medicine.name}
               fill
               className="object-contain rounded-xl border"
             />
@@ -61,7 +66,7 @@ export default async function MedicinePage({
           <div className="bg-card text-card-foreground p-6 rounded-2xl border shadow-sm">
             <p className="text-sm text-muted-foreground">Price</p>
             <p className="text-2xl font-semibold">
-              ${data.data.price}
+              ${medicine.price}
               <span className="text-sm font-normal text-muted-foreground">
                 {" "} / unit
               </span>
@@ -71,14 +76,14 @@ export default async function MedicinePage({
           <div className="bg-card text-card-foreground p-6 rounded-2xl border shadow-sm">
             <p className="text-sm text-muted-foreground">Stock</p>
             <p className="text-2xl font-semibold">
-              {data.data.stock} Units
+              {medicine.stock} Units
             </p>
           </div>
 
           <div className="bg-card text-card-foreground p-6 rounded-2xl border shadow-sm">
             <p className="text-sm text-muted-foreground">Category</p>
             <p className="text-2xl font-semibold">
-              {data.data.categoryName}
+              {medicine.categoryName}
             </p>
           </div>
 
@@ -88,7 +93,7 @@ export default async function MedicinePage({
         {/* Action */}
         {(role !== "ADMIN" && role !== "SELLER") && (
           <div className="w-5/12">
-            <AddToCartButton medicineId={data.data.id} />
+            <AddToCartButton medicineId={medicine.id} />
           </div>
         )}
 
@@ -99,7 +104,7 @@ export default async function MedicinePage({
             Write a Review
           </h2>
 
-          <AddReview medicineId={data.data.id} />
+          <AddReview medicineId={medicine.id} />
         </div>
 
         {/* Reviews Section */}
@@ -107,8 +112,8 @@ export default async function MedicinePage({
           <h2 className="text-2xl font-semibold">Customer Reviews</h2>
 
           <div className="space-y-4">
-            {data.data.reviews && data.data.reviews.length > 0 ? (
-              data.data.reviews.map((review: Review) => (
+            {medicine.reviews && medicine.reviews.length > 0 ? (
+              medicine.reviews.map((review: Review) => (
                 <div
                   key={review.id}
                   className="bg-card text-card-foreground p-5 rounded-2xl border shadow-sm"

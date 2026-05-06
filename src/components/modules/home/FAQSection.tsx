@@ -35,7 +35,7 @@ export function FAQSection() {
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">Frequently Asked Questions</h2>
           <p className="text-muted-foreground">
-            Have questions? We're here to help. Check out our most common inquiries below.
+            Have questions? We are here to help. Check out our most common inquiries below.
           </p>
         </div>
 

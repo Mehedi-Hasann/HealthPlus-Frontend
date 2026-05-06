@@ -10,7 +10,7 @@ export default function ContactPage() {
             Contact Us
           </h1>
           <p className="text-lg text-muted-foreground">
-            Have questions or need assistance? We're here to help you 24/7.
+            Have questions or need assistance? We are here to help you 24/7.
           </p>
         </div>
       </section>

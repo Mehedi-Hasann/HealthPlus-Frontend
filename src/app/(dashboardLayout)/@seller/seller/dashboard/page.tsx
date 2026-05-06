@@ -57,7 +57,7 @@ export default async function AdminDashboard() {
       
       <div className="flex flex-col gap-2">
         <h1 className="text-3xl font-bold tracking-tight text-foreground">Seller Dashboard</h1>
-        <p className="text-muted-foreground">Overview of your store's performance and statistics.</p>
+        <p className="text-muted-foreground">Overview of your stores performance and statistics.</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
