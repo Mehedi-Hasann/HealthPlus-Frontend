@@ -29,6 +29,13 @@ export default function AdminGetAllUsers({ users }: Props) {
     }, {} as Record<string, string>)
   );
 
+  const [userVerification, setUserVerification] = useState(
+    users.reduce((acc, user) => {
+      acc[user.id] = user.emailVerified;
+      return acc;
+    }, {} as Record<string, boolean>)
+  );
+
   const handleStatusChange = (id: string, newStatus: "ACTIVE" | "BLOCKED" | "DELETED" ) => {
     setUserStatus((prev) => ({
       ...prev,
@@ -36,14 +43,22 @@ export default function AdminGetAllUsers({ users }: Props) {
     }));
   };
 
+  const handleVerificationChange = (id: string, newVerification: boolean) => {
+    setUserVerification((prev) => ({
+      ...prev,
+      [id]: newVerification,
+    }));
+  };
+
   const handleSubmit = async(id: string) => {
-    const toastId = toast.loading("Updating user status...");
+    const toastId = toast.loading("Updating user...");
     try {
       const status = userStatus[id];
-      await updateUserStatus(status , id);
-      toast.success("User status updated successfully", { id: toastId });
+      const verified = userVerification[id];
+      await updateUserStatus(status, verified, id);
+      toast.success("User updated successfully", { id: toastId });
     } catch (error) {
-      toast.error("Failed to update user status", { id: toastId });
+      toast.error("Failed to update user", { id: toastId });
     }
   };
 
@@ -105,15 +120,30 @@ export default function AdminGetAllUsers({ users }: Props) {
                       </TableCell>
 
                       <TableCell>
-                        {user.emailVerified ? (
-                          <Badge variant="outline" className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20 gap-1.5 px-2.5 py-0.5">
-                            <ShieldCheck className="w-3 h-3" /> Verified
-                          </Badge>
-                        ) : (
-                          <Badge variant="outline" className="bg-amber-500/10 text-amber-600 border-amber-500/20 px-2.5 py-0.5">
-                            Pending
-                          </Badge>
-                        )}
+                        <div className="relative inline-flex items-center">
+                          <select
+                            value={userVerification[user.id] ? "true" : "false"}
+                            onChange={(e) =>
+                              handleVerificationChange(
+                                user.id,
+                                e.target.value === "true"
+                              )
+                            }
+                            className={`appearance-none bg-background border text-sm rounded-lg px-3 py-1.5 pr-8 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium ${
+                              userVerification[user.id] ? 'border-emerald-500/30 text-emerald-600' : 'border-amber-500/30 text-amber-600'
+                            }`}
+                          >
+                            <option value="true" className="text-foreground">Verified</option>
+                            <option value="false" className="text-foreground">Pending</option>
+                          </select>
+                          <div className="pointer-events-none absolute right-2.5 flex items-center">
+                            <svg className={`h-4 w-4 ${
+                              userVerification[user.id] ? 'text-emerald-500' : 'text-amber-500'
+                            }`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                            </svg>
+                          </div>
+                        </div>
                       </TableCell>
 
                       <TableCell>

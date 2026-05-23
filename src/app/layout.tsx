@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Medi Store",
+  title: "Health Plus",
   description: "Your Trusted Online Medicine Shop",
 };
 

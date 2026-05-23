@@ -41,7 +41,7 @@ export const adminService = {
       return {data : null, error : {message : "Internal Server Error"}}
     }
   },
-  updateUserStatus : async function (userStatus : string,id : string) {
+  updateUserStatus : async function (userStatus : string, emailVerified: boolean, id : string) {
     try {
       const cookieStore = await cookies();
       const res = await fetch(`${API_URL}/api/admin/users/${id}`,{
@@ -50,7 +50,7 @@ export const adminService = {
           "Content-Type" : "application/json",
           Cookie : cookieStore.toString()
         },
-        body : JSON.stringify({userStatus})
+        body : JSON.stringify({userStatus, emailVerified})
       });
       const data = await res.json();
 

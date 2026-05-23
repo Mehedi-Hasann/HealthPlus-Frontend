@@ -139,11 +139,9 @@ const Navbar = ({
     { title: "Home", url: "/" },
     { title: "Shop", url: "/shop" },
     { title: "Dashboard", url: `/${roleBase}/dashboard` },
-    ...(userRole === "CUSTOMER" || !userRole 
-      ? [{ title: "Orders", url: "/customer/orders" }] 
-      : []),
-    ...(userRole === "CUSTOMER" || !userRole ? [{ title: "About", url: "/about" }] : []),
-    ...(userRole === "CUSTOMER" || !userRole ? [{ title: "Contact", url: "/contact" }] : []),
+    ...(roleBase === "customer" ? [{ title: "Orders", url: "/customer/orders" }] : []),
+    { title: "About", url: "/about" },
+    { title: "Contact", url: "/contact" },
   ];
 
   const currentMenu = isLoggedIn ? loggedInMenu : loggedOutMenu;

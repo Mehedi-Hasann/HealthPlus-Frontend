@@ -11,8 +11,8 @@ export const getAllUsers = async() => {
   const res = await adminService.getAllUsers();
   return res;
 }
-export const updateUserStatus = async(userStatus: string, id : string) => {
-  const res = await adminService.updateUserStatus(userStatus, id);
+export const updateUserStatus = async(userStatus: string, emailVerified: boolean, id : string) => {
+  const res = await adminService.updateUserStatus(userStatus, emailVerified, id);
   return res;
 }
 
