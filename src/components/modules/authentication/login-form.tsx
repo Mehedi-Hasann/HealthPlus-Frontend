@@ -48,14 +48,14 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
           expires: 7, // 7 days
           path: "/",
           secure: process.env.NODE_ENV === "production",
-          sameSite: "lax",
+          sameSite: "strict",
         });
 
         Cookies.set("refreshToken", refreshToken, {
           expires: 7,
           path: "/",
           secure: process.env.NODE_ENV === "production",
-          sameSite: "lax",
+          sameSite: "strict",
         });
       }
       router.replace("/shop");
