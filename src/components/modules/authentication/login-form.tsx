@@ -46,18 +46,17 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
 
         Cookies.set("accessToken", accessToken, {
           expires: 7, // 7 days
-          path: "/",
           secure: process.env.NODE_ENV === "production",
-          sameSite: "strict",
+          sameSite: "lax",
         });
 
         Cookies.set("refreshToken", refreshToken, {
           expires: 7,
-          path: "/",
           secure: process.env.NODE_ENV === "production",
-          sameSite: "strict",
+          sameSite: "lax",
         });
       }
+      router.refresh();
       router.replace("/shop");
       toast.success("Log In Successfully",{id : toastId});
     } catch (error) {
