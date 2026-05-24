@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   Menu,
   ShoppingBag,
@@ -113,11 +113,10 @@ const Navbar = ({
   const router = useRouter();
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    const hasToken = document.cookie.split(";").some((c) => c.trim().startsWith("accessToken="));
-    setIsLoggedIn(hasToken);
+  const isLoggedIn = useMemo<boolean>(() => {
+    if (typeof document === "undefined") return false;
+    void pathname;
+    return document.cookie.split(";").some((c) => c.trim().startsWith("accessToken="));
   }, [pathname]);
 
   useEffect(() => {
@@ -129,7 +128,6 @@ const Navbar = ({
   const handleSignOut = async () => {
     document.cookie = "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
     await authClient.signOut();
-    setIsLoggedIn(false);
     router.push("/login");
   };
 
@@ -279,7 +277,7 @@ const Navbar = ({
                   <Menu className="w-5 h-5" />
                 </Button>
               </SheetTrigger>
-              <SheetContent className="overflow-y-auto w-[300px]">
+              <SheetContent className="overflow-y-auto w-80">
                 <SheetHeader className="pb-4">
                   <SheetTitle>
                     <Link
@@ -316,7 +314,7 @@ const Navbar = ({
                   ))}
                   {isLoggedIn && (
                      <Link
-                      href="/profile"
+                      href={`/${roleBase}/profile`}
                       className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
                      >
                        <span className="text-muted-foreground"><User className="w-4 h-4" /></span>
