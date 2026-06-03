@@ -83,7 +83,7 @@ export function SignupForm(
   const handleGoogleLogin = async () => {
     await authClient.signIn.social({
       provider: "google",
-      callbackURL: process.env.FRONTEND_URL,
+      callbackURL: window.location.origin,
     });
   };
 
