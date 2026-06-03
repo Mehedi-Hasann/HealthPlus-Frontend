@@ -37,6 +37,12 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
+  if (pathname === '/cart') {
+    const url = request.nextUrl.clone();
+    url.pathname = '/customer/cart';
+    return NextResponse.redirect(url);
+  }
+
   if (
     role === Roles.admin &&
     (pathname.startsWith('/dashboard') ||

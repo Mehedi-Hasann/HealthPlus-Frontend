@@ -1,5 +1,6 @@
 import { getMyCart } from "@/actions/customer.actions";
 import CustomerCartItem from "@/components/modules/customer/CustomerCartItem";
+import CartPaymentHandler from "@/components/modules/customer/CartPaymentHandler";
 import { CartItemProps } from "@/types/routes.type";
 import { ShoppingCart, PackageOpen } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
@@ -32,6 +33,7 @@ export default async function CartPage() {
 
   return (
     <div className="min-h-[60vh]">
+      <CartPaymentHandler />
       {/* Page Header */}
       <div className="flex items-center gap-3 mb-6">
         <div className="w-9 h-9 rounded-xl bg-emerald-500/10 dark:bg-emerald-400/10 flex items-center justify-center">
