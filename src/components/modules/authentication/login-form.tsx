@@ -42,7 +42,7 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
         return;
       }
       if (res.data?.data) {
-        const { accessToken, refreshToken } = res.data.data;
+        const { accessToken, refreshToken, token } = res.data.data;
 
         Cookies.set("accessToken", accessToken, {
           expires: 7, // 7 days
@@ -55,6 +55,14 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
           secure: process.env.NODE_ENV === "production",
           sameSite: "lax",
         });
+
+        if (token) {
+          Cookies.set("better-auth.session_token", token, {
+            expires: 7,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+          });
+        }
       }
       router.refresh();
       router.replace("/shop");

@@ -1,5 +1,6 @@
 "use client";
 
+import Cookies from "js-cookie";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -70,8 +71,35 @@ export function SignupForm(
           return;
         }
 
-        toast.success("User Created Successfully", { id: toastId });
-        router.replace("/login");
+        if (res.data?.data) {
+          const { accessToken, refreshToken, token } = res.data.data;
+
+          Cookies.set("accessToken", accessToken, {
+            expires: 7, // 7 days
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+          });
+
+          Cookies.set("refreshToken", refreshToken, {
+            expires: 7,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+          });
+
+          if (token) {
+            Cookies.set("better-auth.session_token", token, {
+              expires: 7,
+              secure: process.env.NODE_ENV === "production",
+              sameSite: "lax",
+            });
+          }
+          toast.success("User Registered and Logged In Successfully", { id: toastId });
+          router.refresh();
+          router.replace("/shop");
+        } else {
+          toast.success("User Created Successfully", { id: toastId });
+          router.replace("/login");
+        }
       } catch (error) {
         // console.log(error);
         toast.error("Internal Server Error", { id: toastId });

@@ -113,17 +113,21 @@ const Navbar = ({
   const router = useRouter();
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
-  const isLoggedIn = useMemo<boolean>(() => {
-    if (typeof document === "undefined") return false;
-    void pathname;
-    return document.cookie.split(";").some((c) => c.trim().startsWith("accessToken="));
-  }, [pathname]);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    setIsMounted(true);
     const onScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  const isLoggedIn = useMemo<boolean>(() => {
+    if (!isMounted) return false;
+    if (typeof document === "undefined") return false;
+    void pathname;
+    return document.cookie.split(";").some((c) => c.trim().startsWith("accessToken="));
+  }, [pathname, isMounted]);
 
   const handleSignOut = async () => {
     document.cookie = "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
