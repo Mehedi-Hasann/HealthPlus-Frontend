@@ -2,6 +2,7 @@
 import { cookies } from "next/headers";
 
 const AUTH_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 import { jwtUtils } from "@/lib/jwtUtils";
 
@@ -32,5 +33,22 @@ export const userService = {
       return {data : null, error : {message : "Something Went Wrong . The error => ",details : error}}
     }
 
-  }
+  },
+    SignOutUser : async function () {
+      try {
+        const cookieStore = await cookies();
+        const res = await fetch(`${API_URL}/auth/logout`,{
+          method : "POST",
+          headers : {
+            "Content-Type" : "application/json",
+            Cookie : cookieStore.toString()
+          },
+        });
+        const data = await res.json();
+        return {data : data, error : null}
+  
+      } catch (error) {
+        return {data : null, error : {message : "Internal Server Error"}}
+      }
+    },
 }

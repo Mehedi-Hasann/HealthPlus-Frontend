@@ -24,7 +24,7 @@ import { Roles } from "@/constants/roles"
 import { cn } from "@/lib/utils"
 import { Cross, Home, Store, LogOut } from "lucide-react"
 import { ModeToggle } from "@/components/layout/ModeToggle"
-import { authClient } from "@/lib/auth-client"
+import { SignOutUser } from "@/actions/customer.actions"
 
 export function AppSidebar({user, ...props }: {user : {role: string} & React.ComponentProps<typeof Sidebar>}) {
   const pathname = usePathname();
@@ -48,10 +48,16 @@ export function AppSidebar({user, ...props }: {user : {role: string} & React.Com
   }
 
   const handleSignOut = async () => {
-    // Clear the accessToken cookie
-    document.cookie = "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    await authClient.signOut();
-    router.push("/login");
+    try {
+      await SignOutUser();
+      // Clear client-side cookies
+      document.cookie = "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+      document.cookie = "refreshToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+      document.cookie = "better-auth.session_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+      router.push("/login");
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
   };
 
   return (

@@ -35,8 +35,8 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { ModeToggle } from "./ModeToggle";
 import Link from "next/link";
-import { authClient } from "@/lib/auth-client";
 import { useRouter, usePathname } from "next/navigation";
+import { SignOutUser } from "@/actions/customer.actions";
 
 import {
   DropdownMenu,
@@ -76,7 +76,7 @@ interface Navbar1Props {
   userAvatar?: string;
 }
 
-const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+
 
 const NAV_ICONS: Record<string, React.ReactNode> = {
   Home: <Home className="w-4 h-4" />,
@@ -133,25 +133,18 @@ const Navbar = ({
 
   const handleSignOut = async () => {
     try {
-      // Clear frontend cookie
-      // document.cookie = "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-      
-      // Call server logout endpoint
-      console.log("Hi Bro")
-      await fetch(`${API_URL}/auth/logout`, {
-        method: 'POST',
-        credentials: 'include',
-        headers : {
-          "Content-Type" : "application/json",
-          Cookie : cookieStore.toString()
-        },
-      });
-      
-      // Redirect
+      // Call server action to logout (forwards cookies server-side)
+      await SignOutUser();
+
+      // Clear client-side cookies
+      document.cookie = "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+      document.cookie = "refreshToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+      document.cookie = "better-auth.session_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+
+      // Redirect to login
       router.push('/login');
     } catch (error) {
       console.error('Logout error:', error);
-      // Optional: Show error toast
     }
   };
 

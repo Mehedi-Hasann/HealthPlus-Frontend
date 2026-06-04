@@ -1,6 +1,7 @@
 "use server"
 
 import { customerService, EditInfo, ILoginUser, IRegisterUser } from "@/services/customer.service"
+import { userService } from "@/services/user.service";
 import { Address, CreateReview, PaymentStatus, UpdateAddress } from "@/types/routes.type";
 import { updateTag } from "next/cache";
 
@@ -14,6 +15,11 @@ export const registerUser = async({name,email,password,image} : IRegisterUser) =
 
 export const loginUser = async({email,password} : ILoginUser) => {
   const res = await customerService.loginUser({email,password});
+  return res;
+}
+
+export const SignOutUser = async() => {
+  const res = await userService.SignOutUser();
   return res;
 }
 

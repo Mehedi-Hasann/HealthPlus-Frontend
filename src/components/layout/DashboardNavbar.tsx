@@ -4,42 +4,32 @@ import { Home, Store, LogOut } from "lucide-react";
 import Link from "next/link";
 import { ModeToggle } from "./ModeToggle";
 import { useRouter } from "next/navigation";
-import { authClient } from "@/lib/auth-client";
-import { cookies } from "next/headers";
-
-const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+import { SignOutUser } from "@/actions/customer.actions";
+import { toast } from "sonner";
 
 export function DashboardNavbar() {
   const router = useRouter();
 
-  // const handleSignOut = async () => {
-  //   document.cookie = "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-  //   await authClient.signOut();
-  //   router.push("/login");
-  // };
-
   const handleSignOut = async () => {
     try {
-      // Clear frontend cookie
-      // document.cookie = "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-      
-      // Call server logout endpoint
-      const cookieStore = await cookies();
-      console.log("Hi Bro")
-      await fetch(`${API_URL}/auth/logout`, {
-        method: 'POST',
-        credentials: 'include',
-        headers : {
-          "Content-Type" : "application/json",
-          Cookie : cookieStore.toString()
-        },
-      });
+      // Call server action to logout (forwards cookies server-side)
+      const result = await SignOutUser();
+
+      if(result.error){
+        console.log("error => ",result.error);
+        toast.error(result.error.message);
+        return;
+      }
+
+      // Clear client-side cookies
+      document.cookie = "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+      document.cookie = "refreshToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+      document.cookie = "better-auth.session_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
       
       // Redirect
       router.push('/login');
     } catch (error) {
       console.error('Logout error:', error);
-      // Optional: Show error toast
     }
   };
 
