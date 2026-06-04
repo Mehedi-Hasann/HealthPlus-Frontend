@@ -76,6 +76,8 @@ interface Navbar1Props {
   userAvatar?: string;
 }
 
+const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+
 const NAV_ICONS: Record<string, React.ReactNode> = {
   Home: <Home className="w-4 h-4" />,
   Shop: <Store className="w-4 h-4" />,
@@ -130,9 +132,27 @@ const Navbar = ({
   }, [pathname, isMounted]);
 
   const handleSignOut = async () => {
-    document.cookie = "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    await authClient.signOut();
-    router.push("/login");
+    try {
+      // Clear frontend cookie
+      // document.cookie = "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+      
+      // Call server logout endpoint
+      console.log("Hi Bro")
+      await fetch(`${API_URL}/auth/logout`, {
+        method: 'POST',
+        credentials: 'include',
+        headers : {
+          "Content-Type" : "application/json",
+          Cookie : cookieStore.toString()
+        },
+      });
+      
+      // Redirect
+      router.push('/login');
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Optional: Show error toast
+    }
   };
 
   const roleBase = userRole?.toLowerCase() || "customer";
