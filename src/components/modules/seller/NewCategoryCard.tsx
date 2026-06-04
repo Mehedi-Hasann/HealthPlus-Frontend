@@ -6,8 +6,9 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { useForm } from "@tanstack/react-form";
-import { toast } from "sonner";
+import { toastError } from "@/lib/toastHelper";
 import z from "zod";
+import { toast } from "sonner";
 
 type FormValues = z.infer<typeof formSchema>;
 
@@ -39,10 +40,10 @@ export function NewCategoryCard () {
           toast.success("Category Created Successfully",{id : toastId})
           form.reset();
         }else{
-          toast.error(result.error?.message || "Something Went Wrong", {id: toastId})
+          toastError(result.error?.message || "Something Went Wrong", {id: toastId})
         }
       } catch (error) {
-        toast.error("Category Creation Failed",{id : toastId})
+        toastError("Category Creation Failed",{id : toastId})
       }
     }
   })

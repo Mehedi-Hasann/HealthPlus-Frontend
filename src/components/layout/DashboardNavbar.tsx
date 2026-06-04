@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ModeToggle } from "./ModeToggle";
 import { useRouter } from "next/navigation";
 import { SignOutUser } from "@/actions/customer.actions";
-import { toast } from "sonner";
+import { toastError } from "@/lib/toastHelper";
 
 export function DashboardNavbar() {
   const router = useRouter();
@@ -16,8 +16,8 @@ export function DashboardNavbar() {
       const result = await SignOutUser();
 
       if(result.error){
-        console.log("error => ",result.error);
-        toast.error(result.error.message);
+        // Show concise error toast
+        toastError(result.error);
         return;
       }
 

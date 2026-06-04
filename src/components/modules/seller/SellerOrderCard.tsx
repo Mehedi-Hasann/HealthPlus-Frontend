@@ -13,6 +13,7 @@ import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Order, OrderStatus } from "@/types/routes.type"
 import { updateOrderStatusBySeller } from "@/actions/medicine.actions"
+import { toastError } from "@/lib/toastHelper"
 import { toast } from "sonner"
 import { Package, Hash, Calendar, DollarSign, Loader2 } from "lucide-react"
 
@@ -32,7 +33,7 @@ export function SellerOrderCard({ items }: { items: Order[] }) {
       if(result.data){
         toast.success("Status Updated Successfully", { id: toastId })
       }else{
-        toast.error(result.error?.message || "Something Went Wrong", { id: toastId })
+        toastError(result.error?.message || "Something Went Wrong", { id: toastId })
       }
 
       setSelectedStatus((prev) => {
@@ -41,7 +42,7 @@ export function SellerOrderCard({ items }: { items: Order[] }) {
         return copy
       })
     } catch (error) {
-      toast.error("Status Update Failed", { id: toastId })
+      toastError("Status Update Failed", { id: toastId })
     } finally {
       setIsUpdating((prev) => ({ ...prev, [id]: false }))
     }
