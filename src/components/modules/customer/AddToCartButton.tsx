@@ -13,7 +13,7 @@ export default function AddToCartButton({ medicineId }: { medicineId: string }) 
       if (result.data.success) {
         toast.success("Added to cart!", { id: toastId });
       } else {
-        toast.error(result?.data?.message || "Failed to add item to cart", {
+        toast.error("You need to log in first", {
           id: toastId,
         });
       }

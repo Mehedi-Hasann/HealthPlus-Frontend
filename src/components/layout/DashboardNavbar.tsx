@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ModeToggle } from "./ModeToggle";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
+import { cookies } from "next/headers";
 
 const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -23,6 +24,7 @@ export function DashboardNavbar() {
       // document.cookie = "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
       
       // Call server logout endpoint
+      const cookieStore = await cookies();
       console.log("Hi Bro")
       await fetch(`${API_URL}/auth/logout`, {
         method: 'POST',
